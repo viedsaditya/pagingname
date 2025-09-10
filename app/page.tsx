@@ -3,7 +3,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { getPagings } from "./utils/api";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlane, faPlaneArrival } from '@fortawesome/free-solid-svg-icons';
 
 export default function PagingScreen() {
   const searchParams = useSearchParams();
@@ -19,7 +22,9 @@ export default function PagingScreen() {
   const fetchData = async () => {
     if (!beltNo) return;
     const allPagings = await getPagings();
-    const filtered = (allPagings || []).filter((p: any) => String(p.belt_no) === String(beltNo));
+    const filtered = (allPagings || []).filter(
+      (p: any) => String(p.belt_no) === String(beltNo)
+    );
     if (Array.isArray(filtered) && filtered.length > 0) {
       setSqCode(filtered[0].flight_no || "");
       const passengerNames = filtered
@@ -65,16 +70,27 @@ export default function PagingScreen() {
       id: 1,
       content: (
         <div className="text-center space-y-8">
-          <h1 className="text-6xl md:text-8xl font-extrabold text-cyan-300 drop-shadow-lg">
+          <h1 className="text-5xl md:text-7xl font-extrabold text-cyan-300 drop-shadow-lg">
             ATTENTION
           </h1>
           <p className="text-3xl md:text-5xl text-gray-100">
             THE FOLLOWING PASSENGER(S) <br />
-            OF {sqCode}/25 AUG 2025:
+            OF {sqCode} / {new Date().toLocaleDateString('en-ID', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase()} :
+
+             {/* <div className="text-sm md:text-base text-gray-300">
+              {new Date().toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' })}
+            </div> */}
           </p>
-          <div className={`space-y-4 mt-8 grid ${names.length > 4 ? "grid-cols-2 gap-x-8" : ""}`}>
+          <div
+            className={`space-y-4 mt-8 grid ${
+              names.length > 4 ? "grid-cols-3 gap-x-8" : ""
+            }`}
+          >
             {names.map((name, idx) => (
-              <p key={idx} className="text-4xl md:text-6xl font-bold text-white">
+              <p
+                key={idx}
+                className="text-3xl md:text-5xl font-bold text-white"
+              >
                 {/* {idx + 1}. {name} */}
                 {name}
               </p>
@@ -91,7 +107,10 @@ export default function PagingScreen() {
             PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER
           </p>
           <p className="text-3xl md:text-5xl text-cyan-200 font-semibold">
-            IN FRONT OF BELT {beltNoDisplay}
+            {beltNo 
+              ? `IN FRONT OF BELT ${beltNoDisplay}` 
+              : "AT ARRIVAL HALL INFORMATION COUNTER"
+            }
           </p>
           <p className="text-2xl md:text-4xl text-gray-300">OR</p>
           <p className="text-3xl md:text-5xl text-cyan-200 font-semibold">
@@ -129,36 +148,142 @@ export default function PagingScreen() {
   };
 
   return (
-    <div className="relative h-screen w-screen flex items-center justify-center overflow-hidden 
-                    bg-gradient-to-br from-gray-900 via-blue-950 to-black">
-      {/* Animated cloud/shape blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-cyan-500/30 rounded-full blur-3xl animate-move-slow"></div>
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-green-400/20 rounded-full blur-3xl animate-move-reverse"></div>
-        <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-orange-400/20 rounded-full blur-3xl animate-move-slow"></div>
+    <div
+      className="relative h-screen w-screen flex flex-col overflow-hidden"
+    >
+      {/* Premium Background */}
+      <div className="fixed inset-0 -z-10">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950"></div>
+        
+        {/* Subtle JAS Logo watermark */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.09]">
+          <Image 
+            src="/airport_building.png" 
+            alt="Background Logo" 
+            fill
+            priority
+            className="object-cover"
+          />
+        </div>
+        
+        {/* Enhanced gradient blobs */}
+        <div className="absolute top-20 left-10 w-[35vw] h-[35vw] bg-gradient-to-r from-cyan-500/20 to-blue-500/10 rounded-full blur-3xl animate-move-slow"></div>
+        <div className="absolute bottom-20 right-10 w-[40vw] h-[40vw] bg-gradient-to-r from-blue-600/15 to-cyan-400/10 rounded-full blur-3xl animate-move-reverse"></div>
+        <div className="absolute top-1/3 right-1/4 w-[30vw] h-[30vw] bg-gradient-to-r from-indigo-500/10 to-blue-400/10 rounded-full blur-3xl animate-move-slow"></div>
+        
+        {/* Radial overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(15,23,42,0.7)_100%)]"></div>
+        
+        {/* Improved tech grid */}
+        <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,rgba(56,189,248,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(56,189,248,0.3)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+        
+        {/* Vignette effect */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(15,23,42,0.4)_100%)]"></div>
+        
+        {/* Animated light streaks */}
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent opacity-60"></div>
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400/40 to-transparent opacity-60"></div>
+      </div>
+      
+      {/* Premium Header with Logos */}
+      <div className="relative z-20 px-6 py-3">
+        <div className="relative flex justify-between items-center">
+          {/* Glassmorphism background */}
+          {/* <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-slate-800/60 via-blue-900/50 to-slate-800/60 backdrop-blur-md border-y border-white/10 shadow-lg"></div> */}
+          
+          {/* JAS Logo - Left Side */}
+          <div className="relative flex items-center z-10">
+            <div className="transition-all duration-300">
+              <Image
+                src="/Logo_JAS.png"
+                alt="JAS Logo"
+                width={90}
+                height={45}
+                className="h-10 w-auto object-contain group-hover:scale-105 transition-all duration-300"
+              />
+            </div>
+          </div>
+
+          {/* Time Now */}
+          <div className="relative text-center text-white z-10">
+            <div className="text-lg md:text-2xl font-semibold">
+              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </div>
+            {/* <div className="text-sm md:text-base text-gray-300">
+              {new Date().toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' })}
+            </div> */}
+          </div>
+
+          {/* Airline Logo or Landing Airplane - Right Side */}
+          <div className="relative flex items-center z-10">
+            <div className="relative group">
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-lg blur-sm opacity-0 transition-opacity duration-300"></div>
+              {beltNo ? (
+                <Image
+                  src={`/airlines/${sqCode?.substring(0, 2) || "EY"}.png`}
+                  alt={`${sqCode?.substring(0, 2) || ""} Logo`}
+                  width={64}
+                  height={64}
+                  className="h-12 w-auto object-contain transition-all duration-300"
+                  onError={(e) => {
+                    // Fallback if image doesn't exist
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/airlines/EY.png"; // Default to EY if not found
+                  }}
+                />
+              ) : (
+                // Show Font Awesome airplane icon when no belt number is available
+                <div className="relative p-1">
+                  <FontAwesomeIcon 
+                    icon={faPlaneArrival} 
+                    className="text-white text-4xl transform p-2" 
+                  />
+                  {/* <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-cyan-300 whitespace-nowrap bg-slate-900/80 px-2 py-0.5 rounded">
+                    Arriving Flight
+                  </div> */}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex items-center justify-center h-full w-full p-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={index}
-            initial={{ y: 80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -80, opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="w-full"
-          >
-            {slides[index].content}
-          </motion.div>
-        </AnimatePresence>
+      {/* Enhanced Content Area */}
+      <div className="relative z-10 flex items-center justify-center flex-1 w-full p-8">
+        <div className="relative w-full max-w-5xl">
+          {/* Subtle content frame */}
+          <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-slate-500/10 rounded-xl blur-md"></div>
+          
+          {/* Main content container */}
+          <div className="relative p-8 rounded-xl bg-black/10 backdrop-blur-sm border border-white/10">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={index}
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -50, opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                className="w-full"
+              >
+                {slides[index].content}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          
+          {/* Decorative corner elements */}
+          <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-cyan-400/30 rounded-tl-xl"></div>
+          <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-cyan-400/30 rounded-tr-xl"></div>
+          <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-cyan-400/30 rounded-bl-xl"></div>
+          <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-cyan-400/30 rounded-br-xl"></div>
+        </div>
       </div>
 
       {/* CRUD Form (opsional, bisa dihapus jika hanya display) */}
       {/* ...form code here jika ingin edit... */}
 
-      {/* Extra futuristic grid lines */}
-      <div className="absolute inset-0 z-0 opacity-10 bg-[linear-gradient(to_right,#fff1_1px,transparent_1px),linear-gradient(to_bottom,#fff1_1px,transparent_1px)] bg-[size:60px_60px]" />
+      {/* Footer accent */}
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-slate-950/60 to-transparent z-5"></div>
     </div>
   );
 }
