@@ -210,9 +210,6 @@ export default function PagingScreen() {
             <div className="text-lg md:text-2xl font-semibold">
               {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </div>
-            {/* <div className="text-sm md:text-base text-gray-300">
-              {new Date().toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' })}
-            </div> */}
           </div>
 
           {/* Airline Logo or Landing Airplane - Right Side */}
@@ -233,15 +230,11 @@ export default function PagingScreen() {
                   }}
                 />
               ) : (
-                // Show Font Awesome airplane icon when no belt number is available
                 <div className="relative p-1">
                   <FontAwesomeIcon 
                     icon={faPlaneArrival} 
                     className="text-white text-4xl transform p-2" 
                   />
-                  {/* <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-cyan-300 whitespace-nowrap bg-slate-900/80 px-2 py-0.5 rounded">
-                    Arriving Flight
-                  </div> */}
                 </div>
               )}
             </div>

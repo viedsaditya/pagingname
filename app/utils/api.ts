@@ -14,7 +14,7 @@ export const defaultHeaders = {
 export const getPagings=async()=> {
     const response = await fetch(API_URL,{headers: defaultHeaders});
     if (!response.ok) {
-        throw new Error(`Error ketika akses API : ${response.status}`);
+        throw new Error(`Error accessing API: ${response.status}`);
     }
     return response.json();
 }
@@ -27,7 +27,7 @@ export const addPaging=async(paging: any) => {
         body: JSON.stringify(paging),
     });
     if (!response.ok) {
-        throw new Error(`Error ketika akses API : ${response.status}`);
+        throw new Error(`Error accessing API: ${response.status}`);
     }
     return response.json();
 }
@@ -40,7 +40,7 @@ export const updatePaging=async(paging: any) => {
         body: JSON.stringify(paging),
     });
     if (!response.ok) {
-        throw new Error(`Error ketika akses API : ${response.status}`);
+        throw new Error(`Error accessing API: ${response.status}`);
     }
     return response.json();
 }
@@ -53,7 +53,7 @@ export const deletePaging=async(id: number) => {
         body: JSON.stringify({id}),
     });
     if (!response.ok) {
-        throw new Error(`Error ketika akses API : ${response.status}`);
+        throw new Error(`Error accessing API: ${response.status}`);
     }
     return response.json();
 }

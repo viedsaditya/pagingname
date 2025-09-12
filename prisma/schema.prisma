@@ -18,6 +18,7 @@ model tb_paging {
   belt_no        String
   flight_no      String
   name_passenger String
+  created_at     DateTime @default(now())
 }
 
 //C:\xampp\htdocs\labs\myapp_tailwind>npm install prisma @prisma/client mysql2
