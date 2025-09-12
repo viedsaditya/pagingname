@@ -73,7 +73,7 @@ export default function PagingScreen() {
           <h1 className="text-5xl md:text-7xl font-extrabold text-cyan-300 drop-shadow-lg">
             ATTENTION
           </h1>
-          <p className="text-3xl md:text-5xl text-gray-100">
+          <p className="text-3xl md:text-5xl text-gray-100 mb-10">
             THE FOLLOWING PASSENGER(S) <br />
             OF {sqCode} / {new Date().toLocaleDateString('en-ID', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase()} :
 
@@ -82,14 +82,14 @@ export default function PagingScreen() {
             </div> */}
           </p>
           <div
-            className={`space-y-4 mt-8 grid ${
-              names.length > 4 ? "grid-cols-3 gap-x-8" : ""
+            className={`mt-12 grid ${
+              names.length > 4 ? "grid-cols-3 gap-10" : "grid gap-6"
             }`}
           >
             {names.map((name, idx) => (
               <p
                 key={idx}
-                className="text-3xl md:text-5xl font-bold text-white"
+                className="text-3xl md:text-5xl font-bold text-white text-center"
               >
                 {/* {idx + 1}. {name} */}
                 {name}
