@@ -184,74 +184,60 @@ export default function PagingScreen() {
         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400/40 to-transparent opacity-60"></div>
       </div>
 
-      {/* Premium Header with Logos */}
-      <div className="relative z-20 px-8 py-5 border-b-2 border-blue-700/60">
-        <div className="relative flex justify-between items-center">
-          {/* Glassmorphism background */}
-          {/* <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-slate-800/60 via-blue-900/50 to-slate-800/60 backdrop-blur-md border-y border-white/10 shadow-lg"></div> */}
-
-          {/* JAS Logo - Left Side */}
-          <div className="relative flex items-center z-10">
-            <div className="transition-all duration-300 bg-white/20 backdrop-blur-sm p-3 rounded-md border border-white/30 shadow-md h-20 w-48 flex items-center justify-center">
-              <Image
-                src="/Logo_JAS.png"
-                alt="JAS Logo"
-                width={120}
-                height={60}
-                className="h-12 w-auto object-contain group-hover:scale-105 transition-all duration-300"
-              />
-            </div>
+      {/* Clean and Minimal Header */}
+      <div className="relative z-20 px-6 py-4 border-b border-gray-700 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 backdrop-blur-md">
+        <div className="flex justify-between items-center">
+          {/* JAS Logo */}
+          <div className="flex items-center bg-white/50 p-4 rounded">
+            <Image
+              src="/Logo_JAS.png"
+              alt="JAS Logo"
+              width={140}
+              height={70}
+              className="h-14 w-auto object-contain"
+            />
           </div>
 
-          {/* Time Now */}
-          <div className="relative text-center text-white z-10 px-6 py-2 rounded-lg bg-blue-900/30 backdrop-blur-sm border-t border-white/10">
-            <div className="text-2xl md:text-3xl font-semibold">
+          {/* Current Time and Date */}
+          <div className="text-center text-white">
+            <div className="text-3xl font-semibold">
               {new Date().toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
-                second: "2-digit",
               })}
             </div>
-            <div className="text-sm md:text-base font-medium text-cyan-300">
+            <div className="text-xl text-gray-400">
               {new Date().toLocaleDateString("en-ID", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
-              })}{" "}
+              })} {" "}
               | CGK
             </div>
           </div>
 
-          {/* Airline Logo or Landing Airplane - Right Side */}
-          <div className="relative flex items-center z-10">
-            <div className="relative group bg-white/20 backdrop-blur-sm p-3 rounded-md border border-white/30 shadow-md h-20 w-48 flex items-center justify-center">
-              <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-lg blur-sm opacity-0"></div>
-              {beltNo ? (
-                <Image
-                  src={`/airlines/${sqCode?.substring(0, 2) || "EY"}.png`}
-                  alt={`${sqCode?.substring(0, 2) || ""} Logo`}
-                  width={120}
-                  height={60}
-                  className="h-16 w-auto object-contain transition-all duration-300"
-                  onError={(e) => {
-                    // Fallback if image doesn't exist
-                    const target = e.target as HTMLImageElement;
-                    target.src = "/airlines/EY.png"; // Default to EY if not found
-                  }}
-                />
-              ) : (
-                <div className="relative flex items-center justify-center">
-                  <FontAwesomeIcon
-                    icon={faPlaneArrival}
-                    className="text-white text-4xl transform"
-                  />
-                </div>
-              )}
-            </div>
+          {/* Airline Logo or Icon */}
+          <div className="flex items-center bg-white/50 p-4 rounded">
+            {beltNo ? (
+              <Image
+                src={`/airlines/${sqCode?.substring(0, 2) || "EY"}.png`}
+                alt={`${sqCode?.substring(0, 2) || ""} Logo`}
+                width={140}
+                height={70}
+                className="h-14 w-auto object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = "/airlines/EY.png";
+                }}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faPlaneArrival}
+                className="text-white text-3xl"
+              />
+            )}
           </div>
         </div>
-        {/* Subtle bottom glow for the header */}
-        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent"></div>
       </div>
 
       {/* Enhanced Content Area */}
@@ -319,101 +305,33 @@ export default function PagingScreen() {
       {/* Footer accent - Removed to make more space */}
       {/* <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-950/60 to-transparent z-5"></div> */}
 
-      {/* TV-Style Running Text at the very bottom of the screen */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
-        {/* Airport style infobar - professional LED-style display */}
-        <div className="relative w-full overflow-hidden border-t-2 border-blue-700/60 bg-gradient-to-r from-blue-950/90 via-slate-900/90 to-blue-950/90 backdrop-blur-md py-6 shadow-[0_-5px_8px_-1px_rgba(0,0,0,0.4)]">
-          {/* Light accent line */}
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-blue-400/40"></div>
+      {/* Clean and Minimal Running Text Footer */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 border-t border-gray-700 py-4 overflow-hidden">
+        <div className="animate-marquee flex items-center space-x-8">
+          {/* English Message */}
+          <span className="flex items-center space-x-2">
+            {/* <FontAwesomeIcon
+              icon={faPlane}
+              className="text-cyan-400 text-3xl"
+            /> */}
+            <span className="text-xl md:text-2xl text-cyan-300 font-medium whitespace-nowrap">
+              PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER {beltNo ? `IN FRONT OF BELT 1` : "AT ARRIVAL HALL INFORMATION COUNTER"} OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
+            </span>
+          </span>
 
-          {/* Top shadow for depth effect */}
-          <div className="absolute top-0 left-0 right-0 h-[10px] bg-gradient-to-b from-black/20 to-transparent"></div>
+          {/* Separator */}
+          <span className="text-cyan-400 text-2xl">|</span>
 
-          {/* Subtle scanline effect for airport LED display look */}
-          <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,0.1)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-15 animate-scanlines"></div>
-
-          {/* Marquee container */}
-          <div className="flex whitespace-nowrap py-2">
-            <div className="animate-marquee flex items-center">
-              {/* English message with icon */}
-              <span className="flex items-center">
-                <FontAwesomeIcon
-                  icon={faPlane}
-                  className="text-indigo-300 mx-4 gentle-pulse text-2xl"
-                />
-                <span className="text-xl md:text-4xl text-cyan-100 font-medium tracking-wide font-mono airport-text">
-                  PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
-                  {beltNo
-                    ? `IN FRONT OF BELT ${beltNo}`
-                    : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
-                  OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
-                </span>
-              </span>
-
-              {/* Stylized separator */}
-              {/* <span className="mx-4 px-3 flex space-x-3">
-                <span className="h-5 w-5 rounded-full bg-cyan-500"></span>
-                <span className="h-5 w-5 rounded-full bg-cyan-500"></span>
-              </span> */}
-
-              {/* Indonesian message with icon */}
-              <span className="flex items-center">
-                <FontAwesomeIcon
-                  icon={faPlane}
-                  className="text-indigo-300 mx-4 gentle-pulse text-2xl"
-                />
-                <span className="text-4xl md:text-3xl text-cyan-100 font-medium tracking-wide font-mono airport-text">
-                  HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
-                  {beltNo
-                    ? `DI DEPAN BELT ${beltNo}`
-                    : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
-                  ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
-                </span>
-              </span>
-
-              {/* Stylized separator */}
-              {/* <span className="mx-4 px-3 flex space-x-3">
-                <span className="h-5 w-5 rounded-full bg-cyan-400"></span>
-                <span className="h-5 w-5 rounded-full bg-cyan-400"></span>
-              </span> */}
-
-              {/* Duplicate content for seamless loop - English */}
-              <span className="flex items-center">
-                <FontAwesomeIcon
-                  icon={faPlane}
-                  className="text-indigo-300 mx-4 gentle-pulse text-2xl"
-                />
-                <span className="text-4xl md:text-3xl text-cyan-100 font-medium tracking-wide font-mono airport-text">
-                  PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
-                  {beltNo
-                    ? `IN FRONT OF BELT ${beltNo}`
-                    : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
-                  OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
-                </span>
-              </span>
-
-              {/* Stylized separator */}
-              {/* <span className="mx-4 px-3 flex space-x-3">
-                <span className="h-5 w-5 rounded-full bg-cyan-500"></span>
-                <span className="h-5 w-5 rounded-full bg-cyan-500"></span>
-              </span> */}
-
-              {/* Duplicate content for seamless loop - Indonesian */}
-              <span className="flex items-center">
-                <FontAwesomeIcon
-                  icon={faPlane}
-                  className="text-indigo-300 mx-4 gentle-pulse text-2xl"
-                />
-                <span className="text-4xl md:text-3xl text-cyan-100 font-medium tracking-wide font-mono airport-text">
-                  HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
-                  {beltNo
-                    ? `DI DEPAN BELT ${beltNo}`
-                    : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
-                  ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
-                </span>
-              </span>
-            </div>
-          </div>
+          {/* Indonesian Message */}
+          <span className="flex items-center space-x-2">
+            {/* <FontAwesomeIcon
+              icon={faPlane}
+              className="text-cyan-400 text-3xl"
+            /> */}
+            <span className="text-xl md:text-2xl text-cyan-300 font-medium whitespace-nowrap">
+              HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS {beltNo ? `DI DEPAN BELT 1` : "DI KONTER INFORMASI HALL KEDATANGAN"} ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
+            </span>
+          </span>
         </div>
       </div>
     </div>
