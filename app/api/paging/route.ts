@@ -24,10 +24,10 @@ export async function POST(request: Request) {
         //lakukan validasi api key
         validateApiKey(request);
 
-        const {belt_no, flight_no, name_passenger} = await request.json();
+        const {belt_no, flight_no, name_passenger, handle_by, free_text, status} = await request.json();
 
         //validasi dokumen json yang dikirimkan user (pastikan semua lengkap)
-        if (!belt_no || !flight_no || !name_passenger) {
+        if (!belt_no || !flight_no || !name_passenger || !handle_by || !free_text) {
             throw new Error("All fields are required");
         }
         
@@ -102,10 +102,10 @@ export async function PUT(request: Request) {
         //lakukan validasi api key
         validateApiKey(request);
 
-        const {id, belt_no, flight_no, name_passenger} = await request.json();
+        const {id, belt_no, flight_no, name_passenger, handle_by, free_text, status} = await request.json();
 
         //validasi dokumen json yang dikirimkan user (pastikan semua lengkap)
-        if (!id || !belt_no || !flight_no || !name_passenger) {
+        if (!id || !belt_no || !flight_no || !name_passenger || !handle_by || !free_text) {
             throw new Error("All fields are required");
         }
         
@@ -128,7 +128,10 @@ export async function PUT(request: Request) {
             data: {
                 belt_no: belt_no,
                 flight_no: flight_no,
-                name_passenger: name_passenger
+                name_passenger: name_passenger,
+                handle_by: handle_by,
+                free_text: free_text,
+                status: status !== undefined ? status : 0
             }
         }); 
         return NextResponse.json({message: "Successfully Updated", status: 200});

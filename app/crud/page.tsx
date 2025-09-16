@@ -22,6 +22,9 @@ const Home = () => {
     belt_no: "",
     flight_no: "",
     name_passenger: "",
+    handle_by: "",
+    free_text: "", 
+    status: 0
   });
 
   //siapkan state untuk menangani error validasi form
@@ -29,6 +32,9 @@ const Home = () => {
     belt_no: "",
     flight_no: "",
     name_passenger: "",
+    handle_by: "",
+    free_text: "",
+    status: ""
   });
   
   //state untuk menangani error dari API
@@ -40,6 +46,9 @@ const Home = () => {
       belt_no: "",
       flight_no: "",
       name_passenger: "",
+      handle_by: "",
+      free_text: "",
+      status: ""
     };
     // Check if Belt No is empty
     if (!form.belt_no.trim()) {
@@ -55,7 +64,16 @@ const Home = () => {
     if (!form.name_passenger.trim()) {
       newErrors.name_passenger = "Name Passenger is required";
     }
-    
+
+    if (!form.handle_by.trim()) {
+      newErrors.handle_by = "Handle By is required";
+    }
+
+    // Check if Free Text is empty
+    if (!form.free_text.trim()) {
+      newErrors.free_text = "Free Text is required";
+    }
+
     // Check for duplicate belt number in the client side (optional, server will also check)
     const duplicateBelt = pagings.find(
       p => p.belt_no === form.belt_no && p.id !== form.id
@@ -158,7 +176,7 @@ const Home = () => {
         await addPaging(form);
       }
       //setelah selesai kosongkan form
-      setForm({ id: 0, belt_no: "", flight_no: "", name_passenger: "" });
+      setForm({ id: 0, belt_no: "", flight_no: "", name_passenger: "", handle_by: "", free_text: "", status: 0 });
       //refresh data pada table
       fetchPagings();
     } catch (err: unknown) {
@@ -175,6 +193,86 @@ const Home = () => {
     //hapus cookie dan redirect ke halaman login
     Cookies.remove("logged_in");
     router.push("/login");
+  }
+
+  const handleShow = async (id: number) => {
+    // Add confirmation dialog
+    const confirmation = window.confirm("Are you sure you want to mark this as SHOW?");
+    if (!confirmation) return;
+    
+    try {
+      // Find the paging to update
+      const pagingToUpdate = pagings.find(pag => pag.id === id);
+      
+      if (pagingToUpdate) {
+        // Create updated paging object with status 1 (show)
+        const updatedPaging = { 
+          ...pagingToUpdate, 
+          status: 1 
+        };
+        
+        // Update in the API
+        await updatePaging(updatedPaging);
+        
+        // Update local state for immediate UI feedback
+        const updatedPagings = pagings.map(pag => 
+          pag.id === id ? { ...pag, status: 1 } : pag
+        );
+        setPagings(updatedPagings);
+        
+        // Show success message
+        setApiError("Status updated to SHOW successfully!");
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setApiError("");
+        }, 3000);
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Error updating status";
+      setApiError(errorMessage);
+      console.error("Error updating status:", err);
+    }
+  }
+
+  const handleNoShow = async (id: number) => {
+    // Add confirmation dialog
+    const confirmation = window.confirm("Are you sure you want to mark this as NO SHOW?");
+    if (!confirmation) return;
+    
+    try {
+      // Find the paging to update
+      const pagingToUpdate = pagings.find(pag => pag.id === id);
+      
+      if (pagingToUpdate) {
+        // Create updated paging object with status 0 (no show)
+        const updatedPaging = { 
+          ...pagingToUpdate, 
+          status: 0 
+        };
+        
+        // Update in the API
+        await updatePaging(updatedPaging);
+        
+        // Update local state for immediate UI feedback
+        const updatedPagings = pagings.map(pag => 
+          pag.id === id ? { ...pag, status: 0 } : pag
+        );
+        setPagings(updatedPagings);
+        
+        // Show success message
+        setApiError("Status updated to NO SHOW successfully!");
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setApiError("");
+        }, 3000);
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Error updating status";
+      setApiError(errorMessage);
+      console.error("Error updating status:", err);
+    }
   }
 
   return (
@@ -251,6 +349,26 @@ const Home = () => {
           value={form.name_passenger} onChange={(e) => setForm({...form, name_passenger: e.target.value})}
         />
         {error.name_passenger && <p className="text-red-500">{error.name_passenger}</p>}
+        <select
+          className="border p-2 rounded text-gray-400"
+          value={form.handle_by}
+          onChange={(e) => setForm({ ...form, handle_by: e.target.value })}
+          style={{ color: form.handle_by ? 'black' : 'gray' }}
+        >
+          <option value="" disabled hidden>
+            Handle By
+          </option>
+          <option value="Jas">Jas</option>
+          <option value="Gapura">Gapura</option>
+        </select>
+        {error.handle_by && <p className="text-red-500">{error.handle_by}</p>}
+        <input
+          type="text"
+          placeholder="Free Text"          
+          className="border p-2 rounded"
+          value={form.free_text} onChange={(e) => setForm({...form, free_text: e.target.value})}
+        />
+        {error.free_text && <p className="text-red-500">{error.free_text}</p>}
         <button type="submit" className="bg-blue-500 text-white p-2 rounded">
           {form.id ? "Update" : "Add"} Paging
         </button>
@@ -262,6 +380,9 @@ const Home = () => {
             <th className="border p-2">Belt No</th>
             <th className="border p-2">Flight No</th>
             <th className="border p-2">Name Passenger</th>
+            <th className="border p-2">Handle By</th>
+            <th className="border p-2">Free Text</th>
+            <th className="border p-2">Status</th>
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
@@ -272,6 +393,9 @@ const Home = () => {
                       <td className="border p-2">{pag.belt_no}</td>
                       <td className="border p-2">{pag.flight_no}</td>
                       <td className="border p-2">{pag.name_passenger}</td>
+                      <td className="border p-2">{pag.handle_by}</td>
+                      <td className="border p-2">{pag.free_text}</td>
+                      <td className="border p-2">{pag.status}</td>
                       <td className="border p-2">
                       <button                  
                           className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
@@ -280,10 +404,22 @@ const Home = () => {
                           Edit
                       </button>
                       <button                  
-                          className="bg-red-500 text-white px-2 py-1 rounded"
+                          className="bg-red-500 text-white px-2 py-1 rounded mr-2"
                           onClick={() => handleDelete(pag.id)} 
                       >
                           Delete
+                      </button>
+                      <button
+                          className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                          onClick={() => handleShow(pag.id)}
+                      >
+                          Show
+                      </button>
+                      <button
+                          className="bg-green-500 text-white px-2 py-1 rounded mr-2 mt-2"
+                          onClick={() => handleNoShow(pag.id)}
+                      >
+                          No Show
                       </button>
                       </td>
                   </tr>

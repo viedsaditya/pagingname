@@ -6,7 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { getPagings } from "./utils/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlane, faPlaneArrival } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlane,
+  faPlaneArrival,
+  faPlaneDeparture,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function PagingScreen() {
   const searchParams = useSearchParams();
@@ -14,6 +18,8 @@ export default function PagingScreen() {
 
   const [sqCode, setSqCode] = useState("");
   const [names, setNames] = useState<string[]>([]);
+  const [freeText, setFreeText] = useState(""); // Added state for free_text
+  const [handleBy, setHandleBy] = useState("Jas"); // Default to Jas
 
   // State for edit mode functionality (currently unused)
   /* 
@@ -27,6 +33,9 @@ export default function PagingScreen() {
     belt_no: string | number;
     flight_no?: string;
     name_passenger?: string;
+    handle_by?: string;
+    free_text?: string;
+    status?: number; // Adding status field explicitly
     [key: string]: unknown; // For other properties
   }
 
@@ -34,11 +43,16 @@ export default function PagingScreen() {
   const fetchData = useCallback(async () => {
     if (!beltNo) return;
     const allPagings = await getPagings();
+
+    // Filter by belt_no and status=1 (only show data with status 1)
     const filtered = (allPagings || []).filter(
-      (p: PagingItem) => String(p.belt_no) === String(beltNo)
+      (p: PagingItem) => String(p.belt_no) === String(beltNo) && p.status === 1
     );
+
     if (Array.isArray(filtered) && filtered.length > 0) {
       setSqCode(filtered[0].flight_no || "");
+      setFreeText(filtered[0].free_text || ""); // Store the free_text
+      setHandleBy(filtered[0].handle_by || "Jas"); // Store the handle_by value
       const passengerNames = filtered
         .flatMap((item: PagingItem) =>
           String(item.name_passenger || "").split(",")
@@ -50,6 +64,20 @@ export default function PagingScreen() {
       // setNewSqCode(filtered[0].flight_no || "");
       // setNewNames(passengerNames);
     } else {
+      // If we have beltNo but no filtered data (nothing with status 1),
+      // try to get the free_text from any record with this belt_no
+      const anyBeltData = (allPagings || []).filter(
+        (p: PagingItem) => String(p.belt_no) === String(beltNo)
+      );
+
+      if (anyBeltData.length > 0) {
+        setFreeText(anyBeltData[0].free_text || "");
+        setHandleBy(anyBeltData[0].handle_by || "Jas"); // Store handle_by even for non-status-1 data
+      } else {
+        setFreeText("");
+        setHandleBy("Jas"); // Default to Jas if no data
+      }
+
       setSqCode("");
       setNames([]);
       // Edit mode variables commented out
@@ -187,11 +215,15 @@ export default function PagingScreen() {
       {/* Clean and Minimal Header */}
       <div className="relative z-20 px-6 py-4 border-b border-gray-700 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 backdrop-blur-md">
         <div className="flex justify-between items-center">
-          {/* JAS Logo */}
+          {/* JAS or Gapura Logo based on handle_by value */}
           <div className="flex items-center bg-white/50 p-4 rounded">
             <Image
-              src="/Logo_JAS.png"
-              alt="JAS Logo"
+              src={
+                handleBy?.toLowerCase() === "gapura"
+                  ? "/Logo_Gapura.png"
+                  : "/Logo_JAS.png"
+              }
+              alt={`${handleBy} Logo`}
               width={140}
               height={70}
               className="h-14 w-auto object-contain"
@@ -206,21 +238,21 @@ export default function PagingScreen() {
                 minute: "2-digit",
               })}
             </div>
-            <div className="text-xl text-gray-400">
+            <div className="text-xl text-cyan-400">
               {new Date().toLocaleDateString("en-ID", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
-              })} {" "}
+              })}{" "}
               | CGK
             </div>
           </div>
 
           {/* Airline Logo or Icon */}
           <div className="flex items-center bg-white/50 p-4 rounded">
-            {beltNo ? (
+            {beltNo && sqCode ? (
               <Image
-                src={`/airlines/${sqCode?.substring(0, 2) || "EY"}.png`}
+                src={`/airlines/${sqCode?.substring(0, 2) || ""}.png`}
                 alt={`${sqCode?.substring(0, 2) || ""} Logo`}
                 width={140}
                 height={70}
@@ -232,7 +264,7 @@ export default function PagingScreen() {
               />
             ) : (
               <FontAwesomeIcon
-                icon={faPlaneArrival}
+                icon={faPlaneDeparture}
                 className="text-white text-3xl"
               />
             )}
@@ -245,20 +277,22 @@ export default function PagingScreen() {
         {/* Header Section - Without Frame */}
         <div className="w-full max-w-5xl text-center mb-0">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h1 className="text-5xl md:text-7xl font-extrabold text-cyan-300 drop-shadow-lg">
-                {headerTexts[index].title}
-              </h1>
-              <p className="text-3xl md:text-5xl text-gray-100 mb-1 mt-2">
-                {headerTexts[index].description}
-              </p>
-            </motion.div>
+            {beltNo && sqCode ? (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h1 className="text-5xl md:text-7xl font-extrabold text-cyan-300 drop-shadow-lg">
+                  {headerTexts[index].title}
+                </h1>
+                <p className="text-3xl md:text-5xl text-gray-100 mb-1 mt-2">
+                  {headerTexts[index].description}
+                </p>
+              </motion.div>
+            ) : null}
           </AnimatePresence>
         </div>
 
@@ -268,27 +302,54 @@ export default function PagingScreen() {
           <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-slate-500/10 rounded-xl blur-md mt-6"></div>
 
           {/* Main content container - Only for passenger names - with wider frame */}
-          <div className="relative p-10 rounded-xl bg-black/10 backdrop-blur-sm border border-white/10 w-full mx-auto mt-6">
+          <div
+            className="relative p-10 rounded-xl bg-black/10 backdrop-blur-sm border border-white/10 w-full mx-auto mt-6 flex items-center justify-center"
+            style={{ minHeight: "500px" }}
+          >
             {/* Only passenger names grid - horizontal layout with fixed columns, centered with name wrapping */}
-            <div className="grid grid-cols-4 gap-x-12 gap-y-8 px-6">
-              {names.map((name, idx) => (
-                <div key={idx} className="px-6 flex items-center justify-center">
-                  <p
-                    className="text-3xl md:text-5xl font-bold text-white text-center break-words hyphens-auto"
-                    style={{ 
-                      maxWidth: '100%', 
-                      lineHeight: '1.1', 
-                      display: '-webkit-box',
-                      WebkitLineClamp: '2',
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden'
-                    }}
+            {names.length > 0 ? (
+              <div className="grid grid-cols-4 gap-x-12 gap-y-8 px-6">
+                {names.map((name, idx) => (
+                  <div
+                    key={idx}
+                    className="px-6 flex items-center justify-center"
                   >
-                    {name}
+                    <p
+                      className="text-3xl md:text-5xl font-bold text-white text-center break-words hyphens-auto"
+                      style={{
+                        maxWidth: "100%",
+                        lineHeight: "1.1",
+                        display: "-webkit-box",
+                        WebkitLineClamp: "2",
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center flex-1 text-white text-center min-h-[400px] my-auto mt-30">
+                {freeText ? (
+                  <p className="text-4xl font-bold text-white whitespace-pre-line">
+                    {freeText}
                   </p>
-                </div>
-              ))}
-            </div>
+                ) : (
+                  <>
+                    <p className="text-4xl font-bold mb-4">
+                      PLEASE BE CAREFUL WHILE COLLECTING THE BAG AND DO NOT TAKE
+                      THE WRONG BAGGAGE
+                    </p>
+                    <p className="text-3xl">
+                      OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR
+                      CONVEYOR BELT NO.6
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Decorative corner elements - moved to follow the same margin as the frame */}
@@ -315,7 +376,11 @@ export default function PagingScreen() {
               className="text-cyan-400 text-3xl"
             /> */}
             <span className="text-xl md:text-2xl text-cyan-300 font-medium whitespace-nowrap">
-              PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER {beltNo ? `IN FRONT OF BELT 1` : "AT ARRIVAL HALL INFORMATION COUNTER"} OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
+              PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
+              {beltNo
+                ? `IN FRONT OF BELT 1`
+                : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
+              OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
             </span>
           </span>
 
@@ -329,7 +394,11 @@ export default function PagingScreen() {
               className="text-cyan-400 text-3xl"
             /> */}
             <span className="text-xl md:text-2xl text-cyan-300 font-medium whitespace-nowrap">
-              HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS {beltNo ? `DI DEPAN BELT 1` : "DI KONTER INFORMASI HALL KEDATANGAN"} ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
+              HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
+              {beltNo
+                ? `DI DEPAN BELT 1`
+                : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
+              ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
             </span>
           </span>
         </div>
