@@ -21,21 +21,21 @@ export async function POST(request: Request) {
         //jika body tidak kosong atau first name tidak kosong
         const {firstName} = body;
 
-        const employees = await prisma.emp1.findMany({
+        const pagings = await prisma.tb_paging.findMany({
             where: {
-                firstName: {
+                name_passenger: {
                     contains: firstName
                 }
             }
         });
 
         //jika hasil pencarion tidak ditemukan tampilkan error
-        if(!employees || employees.length === 0) {
+        if(!pagings || pagings.length === 0) {
             return NextResponse.json({message: "Nama Tidak Ditemukan", status: 400});
         }
 
-        // jika ditemukan nama kembalikan data karyawan
-        return NextResponse.json(employees, {status: 200});
+        // jika ditemukan nama kembalikan data paging
+        return NextResponse.json(pagings, {status: 200});
     } catch (error) {
         return NextResponse.json({message: "Terjadi Kesalahan", status: 500});
     }

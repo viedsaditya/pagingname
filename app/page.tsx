@@ -20,6 +20,9 @@ export default function PagingScreen() {
   const [names, setNames] = useState<string[]>([]);
   const [freeText, setFreeText] = useState(""); // Added state for free_text
   const [handleBy, setHandleBy] = useState("Jas"); // Default to Jas
+  const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   // State for edit mode functionality (currently unused)
   /* 
@@ -91,6 +94,34 @@ export default function PagingScreen() {
     fetchData();
   }, [fetchData]);
 
+  // Set client-side flag and initialize time
+  useEffect(() => {
+    setIsClient(true);
+    updateTimeAndDate();
+    
+    // Update time every second
+    const interval = setInterval(updateTimeAndDate, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Function to update time and date
+  const updateTimeAndDate = () => {
+    const now = new Date();
+    setCurrentTime(
+      now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    );
+    setCurrentDate(
+      now.toLocaleDateString("en-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    );
+  };
+
   // Polling untuk auto refresh ketika data berubah di server
   useEffect(() => {
     if (!beltNo) return;
@@ -124,11 +155,7 @@ export default function PagingScreen() {
         <>
           <span className="block mb-3">The Following Passenger(s)</span>
           of <strong>{sqCode}</strong> /{" "}
-          {new Date().toLocaleDateString("en-ID", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })}{" "}
+          {isClient ? currentDate : ""}{" "}
           :
         </>
       ),
@@ -141,11 +168,7 @@ export default function PagingScreen() {
         <>
           <span className="block mb-3">Penumpang Berikut</span>
           Dari <strong>{sqCode}</strong> /{" "}
-          {new Date().toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}{" "}
+          {isClient ? currentDate : ""}{" "}
           :
         </>
       ),
@@ -236,17 +259,10 @@ export default function PagingScreen() {
           <div className="flex justify-center items-center text-white">
             <div className="text-center">
               <div className="text-3xl font-semibold">
-                {new Date().toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {isClient ? currentTime : "00:00"}
               </div>
               <div className="text-xl text-cyan-400">
-                {new Date().toLocaleDateString("en-ID", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}{" "}
+                {isClient ? currentDate : "Loading..."}{" "}
                 | CGK
               </div>
             </div>
