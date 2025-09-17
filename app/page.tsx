@@ -212,62 +212,68 @@ export default function PagingScreen() {
         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400/40 to-transparent opacity-60"></div>
       </div>
 
-      {/* Clean and Minimal Header */}
+      {/* Clean and Minimal Header with standardized sizes */}
       <div className="relative z-20 px-6 py-4 border-b border-gray-700 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 backdrop-blur-md">
-        <div className="flex justify-between items-center">
-          {/* JAS or Gapura Logo based on handle_by value */}
-          <div className="flex items-center bg-white/50 p-4 rounded">
-            <Image
-              src={
-                handleBy?.toLowerCase() === "gapura"
-                  ? "/Logo_Gapura.png"
-                  : "/Logo_JAS.png"
-              }
-              alt={`${handleBy} Logo`}
-              width={140}
-              height={70}
-              className="h-14 w-auto object-contain"
-            />
-          </div>
-
-          {/* Current Time and Date */}
-          <div className="text-center text-white">
-            <div className="text-3xl font-semibold">
-              {new Date().toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </div>
-            <div className="text-xl text-cyan-400">
-              {new Date().toLocaleDateString("en-ID", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}{" "}
-              | CGK
-            </div>
-          </div>
-
-          {/* Airline Logo or Icon */}
-          <div className="flex items-center bg-white/50 p-4 rounded">
-            {beltNo && sqCode ? (
+        <div className="grid grid-cols-3 items-center">
+          {/* JAS or Gapura Logo based on handle_by value - Fixed width column */}
+          <div className="flex items-center justify-start">
+            <div className="bg-white/50 p-4 rounded w-48 h-24 flex items-center justify-center">
               <Image
-                src={`/airlines/${sqCode?.substring(0, 2) || ""}.png`}
-                alt={`${sqCode?.substring(0, 2) || ""} Logo`}
+                src={
+                  handleBy?.toLowerCase() === "gapura"
+                    ? "/Logo_Gapura.png"
+                    : "/Logo_JAS.png"
+                }
+                alt={`${handleBy} Logo`}
                 width={140}
                 height={70}
-                className="h-14 w-auto object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "/airlines/EY.png";
-                }}
+                className="max-h-16 max-w-36 object-contain"
               />
-            ) : (
-              <FontAwesomeIcon
-                icon={faPlaneDeparture}
-                className="text-white text-3xl"
-              />
-            )}
+            </div>
+          </div>
+
+          {/* Current Time and Date - Always centered */}
+          <div className="flex justify-center items-center text-white">
+            <div className="text-center">
+              <div className="text-3xl font-semibold">
+                {new Date().toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
+              <div className="text-xl text-cyan-400">
+                {new Date().toLocaleDateString("en-ID", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}{" "}
+                | CGK
+              </div>
+            </div>
+          </div>
+
+          {/* Airline Logo or Icon - Fixed width column */}
+          <div className="flex items-center justify-end">
+            <div className="bg-white/50 p-4 rounded w-48 h-24 flex items-center justify-center">
+              {beltNo && sqCode ? (
+                <Image
+                  src={`/airlines/${sqCode?.substring(0, 2) || ""}.png`}
+                  alt={`${sqCode?.substring(0, 2) || ""} Logo`}
+                  width={140}
+                  height={70}
+                  className="max-h-16 max-w-36 object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/airlines/EY.png";
+                  }}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faPlaneDeparture}
+                  className="text-white text-3xl"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
