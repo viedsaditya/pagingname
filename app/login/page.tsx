@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
@@ -9,8 +9,8 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = async (e) => {
-    e.preventDefault(e);
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setError("");
     try {
       const response = await fetch("https://belajaroracle.com/api/hrapi/users/login.php", {
