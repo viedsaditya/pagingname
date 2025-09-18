@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,16 +12,19 @@ model tb_paging {
   belt_no        String
   flight_no      String
   name_passenger String
-  created_at     DateTime @default(now())
+  last_update    DateTime @default(now())
   handle_by      String
   free_text      String
   status         Int
 }
 
-//C:\xampp\htdocs\labs\myapp_tailwind>npm install prisma @prisma/client mysql2
-//C:\xampp\htdocs\labs\myapp_tailwind>npx prisma init
-//konekan db
-//url      = "mysql://root:PASWORDJIKAADA@localhost:3306/mydb"
-//C:\xampp\htdocs\labs\myapp_tailwind>npx prisma db push
-//C:\xampp\htdocs\labs\myapp_tailwind>npx prisma generate //optional
-
+model tb_paging_log {
+  id             Int      @id @default(autoincrement())
+  belt_no        String
+  flight_no      String
+  name_passenger String
+  last_update    DateTime @default(now())
+  handle_by      String
+  free_text      String
+  status         Int 
+}

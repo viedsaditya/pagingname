@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlane,
   faPlaneArrival,
+  faTrash,
   faPlaneDeparture,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -355,16 +356,16 @@ export default function PagingScreen() {
             ) : (
               <div className="flex flex-col items-center justify-center flex-1 text-white text-center min-h-[400px] my-auto mt-30">
                 {freeText ? (
-                  <p className="text-4xl font-bold text-white whitespace-pre-line">
+                  <p className="text-6xl font-bold text-white whitespace-pre-line">
                     {freeText}
                   </p>
                 ) : (
                   <>
-                    <p className="text-4xl font-bold mb-4">
+                    <p className="text-6xl font-bold mb-4">
                       PLEASE BE CAREFUL WHILE COLLECTING THE BAG AND DO NOT TAKE
                       THE WRONG BAGGAGE
                     </p>
-                    <p className="text-3xl">
+                    <p className="text-5xl">
                       OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR
                       CONVEYOR BELT NO.6
                     </p>

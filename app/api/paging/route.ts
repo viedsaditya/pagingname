@@ -1,11 +1,12 @@
 //impelementasi CRUD API NEXTJS PRISMA & MYSQL
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { logPagingOperation } from "../../utils/logging";
 
 const prisma = new PrismaClient();
 
 //buat function untuk validasi API_KEY
-const validateApiKey = (request) => {
+const validateApiKey = (request: Request) => {
     //tangkap http header dengan nama x-api-key
     const apiKey = request.headers.get("x-api-key");
 
@@ -24,7 +25,10 @@ export async function POST(request: Request) {
         //lakukan validasi api key
         validateApiKey(request);
 
-        const {belt_no, flight_no, name_passenger, handle_by, free_text, status} = await request.json();
+        const requestBody = await request.json();
+        console.log("Received request body:", requestBody);
+        
+        const {belt_no, flight_no, name_passenger, handle_by, free_text, status} = requestBody;
 
         //validasi dokumen json yang dikirimkan user (pastikan semua lengkap)
         if (!belt_no || !flight_no || !name_passenger || !handle_by || !free_text) {
@@ -46,9 +50,23 @@ export async function POST(request: Request) {
             data: {
                 belt_no,
                 flight_no,
-                name_passenger
+                name_passenger,
+                handle_by,
+                free_text,
+                status: status || 1
             }
         });
+
+        // Create log entry for INSERT operation
+        await logPagingOperation({
+            belt_no,
+            flight_no,
+            name_passenger,
+            handle_by,
+            free_text,
+            status: status || 1
+        });
+
         return NextResponse.json(newPaging, {status: 201});
     } catch (error: unknown) {
         //jika terjadi error maka tampilkan error
@@ -85,9 +103,30 @@ export async function DELETE(request: Request) {
             throw new Error("ID is required");
         }
 
+        // Get the data before deleting for logging purposes
+        const existingPaging = await prisma.tb_paging.findUnique({
+            where: {id}
+        });
+
+        if (!existingPaging) {
+            throw new Error("Data not found");
+        }
+
+        // Delete the record
         await prisma.tb_paging.delete({
             where: {id}
         });
+
+        // Create log entry for DELETE operation
+        await logPagingOperation({
+            belt_no: existingPaging.belt_no,
+            flight_no: existingPaging.flight_no,
+            name_passenger: existingPaging.name_passenger,
+            handle_by: existingPaging.handle_by,
+            free_text: existingPaging.free_text,
+            status: existingPaging.status
+        });
+
         return NextResponse.json({message: "Successfully Deleted", status: 202});
     } catch (error: unknown) {
         //jika terjadi error maka tampilkan error
@@ -133,7 +172,18 @@ export async function PUT(request: Request) {
                 free_text: free_text,
                 status: status !== undefined ? status : 0
             }
-        }); 
+        });
+
+        // Create log entry for UPDATE operation
+        await logPagingOperation({
+            belt_no: belt_no,
+            flight_no: flight_no,
+            name_passenger: name_passenger,
+            handle_by: handle_by,
+            free_text: free_text,
+            status: status !== undefined ? status : 0
+        });
+
         return NextResponse.json({message: "Successfully Updated", status: 200});
     } catch (error: unknown) {
         //jika terjadi error maka tampilkan error
