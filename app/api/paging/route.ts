@@ -58,7 +58,6 @@ export async function POST(request: Request) {
         });
 
         // Create log entry for INSERT operation
-        console.log("Creating log entry for INSERT operation...");
         await logPagingOperation({
             belt_no,
             flight_no,
@@ -67,7 +66,6 @@ export async function POST(request: Request) {
             free_text,
             status: status || 1
         });
-        console.log("Log entry created successfully for INSERT");
 
         return NextResponse.json(newPaging, {status: 201});
     } catch (error: unknown) {
@@ -120,7 +118,6 @@ export async function DELETE(request: Request) {
         });
 
         // Create log entry for DELETE operation
-        console.log("Creating log entry for DELETE operation...");
         await logPagingOperation({
             belt_no: existingPaging.belt_no,
             flight_no: existingPaging.flight_no,
@@ -129,7 +126,6 @@ export async function DELETE(request: Request) {
             free_text: existingPaging.free_text,
             status: existingPaging.status
         });
-        console.log("Log entry created successfully for DELETE");
 
         return NextResponse.json({message: "Successfully Deleted", status: 202});
     } catch (error: unknown) {
@@ -179,7 +175,6 @@ export async function PUT(request: Request) {
         });
 
         // Create log entry for UPDATE operation
-        console.log("Creating log entry for UPDATE operation...");
         await logPagingOperation({
             belt_no: belt_no,
             flight_no: flight_no,
@@ -188,7 +183,6 @@ export async function PUT(request: Request) {
             free_text: free_text,
             status: status !== undefined ? status : 0
         });
-        console.log("Log entry created successfully for UPDATE");
 
         return NextResponse.json({message: "Successfully Updated", status: 200});
     } catch (error: unknown) {
