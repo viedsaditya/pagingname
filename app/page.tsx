@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -200,6 +200,7 @@ export default function PagingScreen() {
   */
 
   return (
+    <Suspense fallback={null}>
     <div className="relative h-screen w-screen flex flex-col overflow-hidden">
       {/* Premium Background */}
       <div className="fixed inset-0 -z-10">
@@ -455,5 +456,6 @@ export default function PagingScreen() {
         </div>
       </div>
     </div>
+    </Suspense>
   );
 }
