@@ -329,16 +329,44 @@ export default function PagingScreen() {
             className="relative p-10 rounded-xl bg-black/10 backdrop-blur-sm border border-white/10 w-full mx-auto mt-6 flex items-center justify-center"
             style={{ minHeight: "500px" }}
           >
-            {/* Only passenger names grid - horizontal layout with fixed columns, centered with name wrapping */}
+            {/* Dynamic passenger names grid - responsive layout that centers based on number of names */}
             {names.length > 0 ? (
-              <div className="grid grid-cols-4 gap-x-12 gap-y-8 px-6">
+              <div 
+                className={`grid gap-x-8 gap-y-6 px-6 place-items-center ${
+                  names.length === 1 
+                    ? 'grid-cols-1' 
+                    : names.length === 2 
+                    ? 'grid-cols-2' 
+                    : names.length === 3 
+                    ? 'grid-cols-3' 
+                    : names.length <= 4
+                    ? 'grid-cols-2'
+                    : names.length <= 6
+                    ? 'grid-cols-3'
+                    : names.length <= 8
+                    ? 'grid-cols-4'
+                    : 'grid-cols-4'
+                }`}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
                 {names.map((name, idx) => (
                   <div
                     key={idx}
-                    className="px-6 flex items-center justify-center"
+                    className="flex items-center justify-center w-full"
                   >
                     <p
-                      className="text-3xl md:text-5xl font-bold text-white text-center break-words hyphens-auto"
+                      className={`font-bold text-white text-center break-words hyphens-auto ${
+                        names.length === 1 
+                          ? 'text-5xl md:text-6xl' 
+                          : names.length === 2 
+                          ? 'text-5xl md:text-7xl' 
+                          : names.length === 3 
+                          ? 'text-4xl md:text-6xl' 
+                          : 'text-3xl md:text-5xl'
+                      }`}
                       style={{
                         maxWidth: "100%",
                         lineHeight: "1.1",
