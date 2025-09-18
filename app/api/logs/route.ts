@@ -25,7 +25,11 @@ export async function GET(request: Request) {
         validateApiKey(request);
 
         // Use type assertion to access the log table
-        const pagingLogs = await (prisma as any).tb_paging_log.findMany({
+        const pagingLogs = await (prisma as unknown as {
+            tb_paging_log: {
+                findMany: (args: { orderBy: { last_update: string } }) => Promise<unknown[]>;
+            };
+        }).tb_paging_log.findMany({
             orderBy: {
                 last_update: 'desc'
             }

@@ -14,7 +14,11 @@ export interface PagingData {
 export async function logPagingOperation(data: PagingData) {
   try {
     // Use type assertion to ensure the model exists
-    const logEntry = await (prisma as any).tb_paging_log.create({
+    const logEntry = await (prisma as unknown as {
+      tb_paging_log: {
+        create: (args: { data: PagingData }) => Promise<unknown>;
+      };
+    }).tb_paging_log.create({
       data: {
         belt_no: data.belt_no,
         flight_no: data.flight_no,

@@ -37,6 +37,7 @@ export async function POST(request: Request) {
         // jika ditemukan nama kembalikan data paging
         return NextResponse.json(pagings, {status: 200});
     } catch (error) {
+        console.error("Search error:", error);
         return NextResponse.json({message: "Terjadi Kesalahan", status: 500});
     }
 }

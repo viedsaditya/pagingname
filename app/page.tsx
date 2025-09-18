@@ -7,13 +7,11 @@ import Image from "next/image";
 import { getPagings } from "./utils/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPlane,
-  faPlaneArrival,
-  faTrash,
   faPlaneDeparture,
 } from "@fortawesome/free-solid-svg-icons";
+import ClientOnly from "./components/ClientOnly";
 
-export default function PagingScreen() {
+function PagingScreenContent() {
   const searchParams = useSearchParams();
   const beltNo = useMemo(() => searchParams.get("belt_no"), [searchParams]);
 
@@ -21,8 +19,8 @@ export default function PagingScreen() {
   const [names, setNames] = useState<string[]>([]);
   const [freeText, setFreeText] = useState(""); // Added state for free_text
   const [handleBy, setHandleBy] = useState("Jas"); // Default to Jas
-  const [currentTime, setCurrentTime] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
+  const [currentTime, setCurrentTime] = useState("00:00");
+  const [currentDate, setCurrentDate] = useState("Loading...");
   const [isClient, setIsClient] = useState(false);
 
   // State for edit mode functionality (currently unused)
@@ -148,7 +146,7 @@ export default function PagingScreen() {
   }, []);
 
   // Header titles that will animate/change
-  const headerTexts = [
+  const headerTexts = useMemo(() => [
     {
       id: 1,
       title: "ATTENTION",
@@ -160,7 +158,6 @@ export default function PagingScreen() {
           :
         </>
       ),
-      // description: <>THE FOLLOWING PASSENGER(S) <br/>OF <strong>{sqCode}</strong> / {new Date().toLocaleDateString('en-ID', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase()} :</>
     },
     {
       id: 2,
@@ -173,9 +170,8 @@ export default function PagingScreen() {
           :
         </>
       ),
-      // description: <>PENUMPANG BERIKUT <br/>DARI <strong>{sqCode}</strong> / {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase()} :</>
     },
-  ];
+  ], [sqCode, isClient, currentDate]);
 
   // Animation setup for language switching
   // Timer interval already set up above
@@ -200,8 +196,7 @@ export default function PagingScreen() {
   */
 
   return (
-    <Suspense fallback={null}>
-    <div className="relative h-screen w-screen flex flex-col overflow-hidden">
+    <div className="relative h-screen w-screen flex flex-col overflow-hidden" suppressHydrationWarning>
       {/* Premium Background */}
       <div className="fixed inset-0 -z-10">
         {/* Base gradient */}
@@ -259,15 +254,21 @@ export default function PagingScreen() {
 
           {/* Current Time and Date - Always centered */}
           <div className="flex justify-center items-center text-white">
-            <div className="text-center">
-              <div className="text-3xl font-semibold">
-                {isClient ? currentTime : "00:00"}
+            <ClientOnly fallback={
+              <div className="text-center">
+                <div className="text-3xl font-semibold">00:00</div>
+                <div className="text-xl text-cyan-400">Loading... | CGK</div>
               </div>
-              <div className="text-xl text-cyan-400">
-                {isClient ? currentDate : "Loading..."}{" "}
-                | CGK
+            }>
+              <div className="text-center">
+                <div className="text-3xl font-semibold" suppressHydrationWarning>
+                  {currentTime}
+                </div>
+                <div className="text-xl text-cyan-400" suppressHydrationWarning>
+                  {currentDate} | CGK
+                </div>
               </div>
-            </div>
+            </ClientOnly>
           </div>
 
           {/* Airline Logo or Icon - Fixed width column */}
@@ -300,24 +301,26 @@ export default function PagingScreen() {
       <div className="relative z-10 flex flex-col items-center flex-1 w-full p-8 pt-4 pb-0 space-y-0">
         {/* Header Section - Without Frame */}
         <div className="w-full max-w-5xl text-center mb-0">
-          <AnimatePresence mode="wait">
-            {beltNo && sqCode ? (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h1 className="text-5xl md:text-7xl font-extrabold text-cyan-300 drop-shadow-lg">
-                  {headerTexts[index].title}
-                </h1>
-                <p className="text-3xl md:text-5xl text-gray-100 mb-1 mt-2">
-                  {headerTexts[index].description}
-                </p>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+          <ClientOnly>
+            <AnimatePresence mode="wait">
+              {beltNo && sqCode ? (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <h1 className="text-5xl md:text-7xl font-extrabold text-cyan-300 drop-shadow-lg">
+                    {headerTexts[index].title}
+                  </h1>
+                  <p className="text-3xl md:text-5xl text-gray-100 mb-1 mt-2" suppressHydrationWarning>
+                    {headerTexts[index].description}
+                  </p>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </ClientOnly>
         </div>
 
         {/* Passenger Names Section - With Frame */}
@@ -456,6 +459,13 @@ export default function PagingScreen() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PagingScreen() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 flex items-center justify-center text-white">Loading...</div>}>
+      <PagingScreenContent />
     </Suspense>
   );
 }

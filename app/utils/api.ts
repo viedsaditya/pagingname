@@ -19,8 +19,19 @@ export const getPagings=async()=> {
     return response.json();
 }
 
+//Define interface for paging data
+interface PagingData {
+  id?: number;
+  belt_no: string;
+  flight_no: string;
+  name_passenger: string;
+  handle_by: string;
+  free_text: string;
+  status: number;
+}
+
 //function untuk menambah data paging
-export const addPaging=async(paging: any) => {
+export const addPaging=async(paging: PagingData) => {
     const response = await fetch(API_URL, {
         method: "POST",
         headers: defaultHeaders,
@@ -33,7 +44,7 @@ export const addPaging=async(paging: any) => {
 }
 
 //function untuk mengupdate data paging
-export const updatePaging=async(paging: any) => {
+export const updatePaging=async(paging: PagingData) => {
     const response = await fetch(API_URL, {
         method: "PUT",
         headers: defaultHeaders,

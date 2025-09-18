@@ -28,7 +28,15 @@ const Home = () => {
 
   //=============VIEW DATA
   //siapkan variable state yang dibutuhkan
-  const [pagings, setPagings] = useState<any[]>([]);
+  const [pagings, setPagings] = useState<Array<{
+    id: number;
+    belt_no: string;
+    flight_no: string;
+    name_passenger: string;
+    handle_by: string;
+    free_text: string;
+    status: number;
+  }>>([]);
   const [form, setForm] = useState({
     id: 0,
     belt_no: "",
@@ -153,7 +161,15 @@ const Home = () => {
 
   //=============UPDATE DATA
   //function untuk populate data ke form jika button edit diklik
-  const handleEdit = (paging: any) => {
+  const handleEdit = (paging: {
+    id: number;
+    belt_no: string;
+    flight_no: string;
+    name_passenger: string;
+    handle_by: string;
+    free_text: string;
+    status: number;
+  }) => {
     setForm(paging);
   };
 

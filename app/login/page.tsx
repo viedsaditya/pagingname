@@ -32,6 +32,7 @@ const LoginPage = () => {
       }
 
     } catch (error) {
+      console.error("Login error:", error);
       setError("Ada kesalah ketika login");
     }
   }
