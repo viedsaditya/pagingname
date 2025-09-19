@@ -666,7 +666,7 @@ const Home = () => {
                       </td>
                       <td className="py-4 px-4">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold border ${
+                          className={`inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold border whitespace-nowrap ${
                             pag.status === 1
                               ? 'bg-green-500/20 text-green-400 border-green-500/30'
                               : 'bg-red-500/20 text-red-400 border-red-500/30'
