@@ -157,7 +157,7 @@ const Home = () => {
       } else { //jika user sudah login maka tampilkan data employee
     fetchPagings();
       }
-  }, []);
+  }, [router]);
 
   //=============UPDATE DATA
   //function untuk populate data ke form jika button edit diklik
