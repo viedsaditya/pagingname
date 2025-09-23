@@ -149,14 +149,14 @@ const Home = () => {
 
   //panggil method fetchPagings secara background
   useEffect(() => {
-    //   //pastikan data employees muncul jika user sudah login
-    //   const loggedIn = Cookies.get("logged_in");
-    //   //jika user belum login redirect ke halaman login
-    //   if (!loggedIn) {
-    //     router.push("/login");
-    //   } else { //jika user sudah login maka tampilkan data employee
+      //pastikan data employees muncul jika user sudah login
+      const loggedIn = Cookies.get("logged_in");
+      //jika user belum login redirect ke halaman login
+      if (!loggedIn) {
+        router.push("/login");
+      } else { //jika user sudah login maka tampilkan data employee
     fetchPagings();
-    //   }
+      }
   }, []);
 
   //=============UPDATE DATA

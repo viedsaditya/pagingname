@@ -5,10 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { getPagings } from "./utils/api";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlaneDeparture,
-} from "@fortawesome/free-solid-svg-icons";
+
 import ClientOnly from "./components/ClientOnly";
 
 function PagingScreenContent() {
@@ -245,9 +242,9 @@ function PagingScreenContent() {
                     : "/Logo_JAS.png"
                 }
                 alt={`${handleBy} Logo`}
-                width={140}
-                height={70}
-                className="max-h-16 max-w-36 object-contain"
+                width={200}
+                height={100}
+                className="max-h-20 max-w-44 object-contain"
               />
             </div>
           </div>
@@ -278,8 +275,8 @@ function PagingScreenContent() {
                 <Image
                   src={`/airlines/${sqCode?.substring(0, 2) || ""}.png`}
                   alt={`${sqCode?.substring(0, 2) || ""} Logo`}
-                  width={140}
-                  height={70}
+                  width={200}
+                  height={100}
                   className="max-h-16 max-w-36 object-contain"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -287,9 +284,12 @@ function PagingScreenContent() {
                   }}
                 />
               ) : (
-                <FontAwesomeIcon
-                  icon={faPlaneDeparture}
-                  className="text-white text-3xl"
+                <Image
+                  src="/Arrival.png"
+                  alt="Arrival Icon"
+                  width={200}
+                  height={100}
+                  className="max-h-20 max-w-44 object-contain"
                 />
               )}
             </div>
