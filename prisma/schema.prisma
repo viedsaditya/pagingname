@@ -28,3 +28,13 @@ model tb_paging_log {
   free_text      String
   status         Int
 }
+
+model tb_user {
+  id_usr         Int      @id @default(autoincrement())
+  fullname       String
+  username       String
+  password       String
+  email          String
+  nohp           String
+  is_active      Int
+}
