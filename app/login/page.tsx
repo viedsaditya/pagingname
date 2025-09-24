@@ -27,7 +27,7 @@ const LoginPage = () => {
 
       if(data.logged_in === "1") {
         //jika berhasil login maka buat cookie dan redirect ke halaman crud
-        Cookies.set("logged_in", "1", { expires: 1 });
+        Cookies.set("logged_in", "1", { expires: 6/24 });
         router.push("/crud");
       } else { // error ketika salah username atau password
         setError("Username atau Password Anda Salah");
@@ -118,7 +118,7 @@ const LoginPage = () => {
               type="submit"
               className="w-full rounded-lg bg-blue-900 py-3 font-semibold text-white transition hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             >
-              Masuk
+              Login
             </button>
           </form>
         </div>

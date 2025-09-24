@@ -168,3 +168,61 @@ body {
 .animate-float-in-out {
   animation: float-in-out 3s ease-in-out infinite;
 }
+
+/* ===== Airplane Logout Overlay Styles ===== */
+@keyframes cloud-drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-120%); }
+}
+
+.cloud {
+  position: absolute;
+  top: 10%;
+  left: 110%;
+  width: 180px;
+  height: 60px;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 60%, rgba(255,255,255,0.0) 70%);
+  filter: blur(1px);
+  border-radius: 9999px;
+  animation: cloud-drift 20s linear infinite;
+}
+
+.cloud::before,
+.cloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  width: 120px;
+  height: 50px;
+  top: -20px;
+  left: -40px;
+  border-radius: 9999px;
+}
+
+.cloud::after {
+  width: 140px;
+  height: 55px;
+  top: 10px;
+  left: 60px;
+}
+
+.cloud-1 { top: 20%; animation-duration: 26s; transform: scale(1); }
+.cloud-2 { top: 35%; animation-duration: 22s; transform: scale(0.9); }
+.cloud-3 { top: 10%; animation-duration: 30s; transform: scale(1.1); }
+
+.runway-light {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(125,211,252,1) 0%, rgba(56,189,248,0.6) 50%, rgba(56,189,248,0.0) 70%);
+  box-shadow: 0 0 8px rgba(56,189,248,0.8), 0 0 14px rgba(56,189,248,0.5);
+}
+
+@keyframes plane-bounce-keyframes {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.plane-bounce {
+  animation: plane-bounce-keyframes 1.2s ease-in-out infinite;
+}

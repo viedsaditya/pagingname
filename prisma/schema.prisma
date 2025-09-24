@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:@localhost:3306/pagingname"
+  url      = env("DATABASE_URL")
 }
 
 model tb_paging {
@@ -26,15 +26,5 @@ model tb_paging_log {
   last_update    DateTime @default(now())
   handle_by      String
   free_text      String
-  status         Int 
-}
-
-model tb_user {
-  id_usr         Int      @id @default(autoincrement())
-  fullname       String
-  username       String
-  password       String
-  email          String
-  nohp           String
-  is_active      Int
+  status         Int
 }

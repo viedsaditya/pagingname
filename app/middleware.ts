@@ -14,5 +14,5 @@ export function middleware(request: NextRequest) {
 
 //buat daftar alamat yang akan diprotect
 export const config = {
-    matcher: ["/crud"],
+    matcher: ["/", "/crud"],
 };
