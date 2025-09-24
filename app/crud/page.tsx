@@ -16,6 +16,7 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
 const Home = () => {
   //tambahan fitur untuk pagination
@@ -369,7 +370,7 @@ const Home = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-slate-700/40 border border-white/10 overflow-hidden">
-                <img src="/logojasaja.png" alt="JAS" className="w-10 h-10 object-contain" />
+                <Image src="/logojasaja.png" alt="JAS" width={40} height={40} className="w-10 h-10 object-contain" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">
