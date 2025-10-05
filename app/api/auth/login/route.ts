@@ -34,8 +34,10 @@ export async function POST(request: Request) {
 
         if (user) {
             // User found and active
+            const loginTime = new Date().getTime(); // Get current timestamp
             return NextResponse.json({ 
                 logged_in: "1",
+                login_time: loginTime, // Add login timestamp
                 user: {
                     id: user.id_usr,
                     fullname: user.fullname,

@@ -1,10 +1,10 @@
-//contoh pencarian data based on non id (nama)
+//example search data based on non id (name)
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-//pencarian based on nama dengan method POST
+//search based on name using POST method
 export async function POST(request: Request) {
     try {
         //ambil body JSON yang dikirim client
@@ -13,12 +13,12 @@ export async function POST(request: Request) {
         //debuging
         console.log('Body yang diterima dari client:',body);
 
-        //jika body kosong atau first name kosong
+        //if body is empty or first name is empty
         if(!body || !body.firstName) {
-            return NextResponse.json({message: "Nama harus diisi", status: 400});
+            return NextResponse.json({message: "Name must be filled", status: 400});
         }
 
-        //jika body tidak kosong atau first name tidak kosong
+        //if body is not empty or first name is not empty
         const {firstName} = body;
 
         const pagings = await prisma.tb_paging.findMany({
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
             }
         });
 
-        //jika hasil pencarion tidak ditemukan tampilkan error
+        //if search results not found show error
         if(!pagings || pagings.length === 0) {
             return NextResponse.json({message: "Nama Tidak Ditemukan", status: 400});
         }

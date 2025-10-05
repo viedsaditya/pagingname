@@ -1,5 +1,17 @@
 //ini adalah libary untuk berurusan dengan API
-const API_URL = "http://localhost:3000/api/paging";
+// Function to get base URL
+const getBaseURL = () => {
+  if (typeof window !== 'undefined') {
+    // Client side
+    return window.location.origin;
+  }
+  // Server side
+  return process.env.NEXTAUTH_URL || 'http://localhost:3000';
+};
+
+const API_URL = "/api/paging";
+const USER_API_URL = "/api/users";
+const STATION_API_URL = "/api/stations";
 
 //tambahkan api key
 const API_KEY = "rahasia";
@@ -28,6 +40,18 @@ interface PagingData {
   handle_by: string;
   free_text: string;
   status: number;
+}
+
+//Define interface for user data
+interface UserData {
+  id_usr?: number;
+  id_sts: number;
+  fullname: string;
+  username: string;
+  password: string;
+  email: string;
+  nohp: string;
+  is_active: number;
 }
 
 //function untuk menambah data paging
@@ -65,6 +89,82 @@ export const deletePaging=async(id: number) => {
     });
     if (!response.ok) {
         throw new Error(`Error accessing API: ${response.status}`);
+    }
+    return response.json();
+}
+
+// ========= USER API FUNCTIONS =========
+
+//function untuk mengambil semua data user
+export const getUsers=async()=> {
+    const apiUrl = typeof window !== 'undefined' ? USER_API_URL : `${getBaseURL()}${USER_API_URL}`;
+    const response = await fetch(apiUrl,{headers: defaultHeaders});
+    if (!response.ok) {
+        throw new Error(`Error accessing User API: ${response.status}`);
+    }
+    return response.json();
+}
+
+//function untuk menambah data user
+export const addUser=async(user: UserData) => {
+    const apiUrl = typeof window !== 'undefined' ? USER_API_URL : `${getBaseURL()}${USER_API_URL}`;
+    console.log("addUser called with:", user);
+    console.log("API URL:", apiUrl);
+    console.log("Headers:", defaultHeaders);
+    
+    const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: defaultHeaders,
+        body: JSON.stringify(user),
+    });
+    
+    console.log("Response status:", response.status);
+    console.log("Response ok:", response.ok);
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        throw new Error(`Error accessing User API: ${response.status}`);
+    }
+    return response.json();
+}
+
+//function untuk mengupdate data user
+export const updateUser=async(user: UserData) => {
+    const apiUrl = typeof window !== 'undefined' ? USER_API_URL : `${getBaseURL()}${USER_API_URL}`;
+    const response = await fetch(apiUrl, {
+        method: "PUT",
+        headers: defaultHeaders,
+        body: JSON.stringify(user),
+    });
+    if (!response.ok) {
+        throw new Error(`Error accessing User API: ${response.status}`);
+    }
+    return response.json();
+}
+
+//function untuk menghapus data user
+export const deleteUser=async(id_usr: number) => {
+    const apiUrl = typeof window !== 'undefined' ? USER_API_URL : `${getBaseURL()}${USER_API_URL}`;
+    const response = await fetch(apiUrl, {
+        method: "DELETE",
+        headers: defaultHeaders,
+        body: JSON.stringify({id_usr}),
+    });
+    if (!response.ok) {
+        throw new Error(`Error accessing User API: ${response.status}`);
+    }
+    return response.json();
+}
+
+// ========= STATION API FUNCTIONS =========
+
+//function untuk mengambil semua data station
+export const getStations=async()=> {
+    const apiUrl = typeof window !== 'undefined' ? STATION_API_URL : `${getBaseURL()}${STATION_API_URL}`;
+    const response = await fetch(apiUrl,{headers: defaultHeaders});
+    if (!response.ok) {
+        throw new Error(`Error accessing Station API: ${response.status}`);
     }
     return response.json();
 }

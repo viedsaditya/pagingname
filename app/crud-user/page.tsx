@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import {
-  addPaging,
-  deletePaging,
-  getPagings,
-  updatePaging,
+  addUser,
+  deleteUser,
+  getUsers,
+  updateUser,
+  getStations,
 } from "../utils/api";
 //tambahkan dua import baru untuk impelementasi authentication
 import { useRouter } from "next/navigation";
@@ -33,35 +34,46 @@ const Home = () => {
 
   //=============VIEW DATA
   //siapkan variable state yang dibutuhkan
-  const [pagings, setPagings] = useState<
+  const [users, setUsers] = useState<
     Array<{
-      id: number;
-      belt_no: string;
-      flight_no: string;
-      name_passenger: string;
-      handle_by: string;
-      free_text: string;
-      status: number;
+      id_usr: number;
+      id_sts: number;
+      fullname: string;
+      username: string;
+      password: string;
+      email: string;
+      nohp: string;
+      is_active: number;
+    }>
+  >([]);
+
+  const [stations, setStations] = useState<
+    Array<{
+      id_sts: number;
+      code_station: string;
+      name_station: string;
     }>
   >([]);
   const [form, setForm] = useState({
-    id: 0,
-    belt_no: "",
-    flight_no: "",
-    name_passenger: "",
-    handle_by: "",
-    free_text: "",
-    status: 0,
+    id_usr: 0,
+    id_sts: 0,
+    fullname: "",
+    username: "",
+    password: "",
+    email: "",
+    nohp: "",
+    is_active: 1,
   });
 
   //prepare state to handle form validation errors
   const [error, setError] = useState({
-    belt_no: "",
-    flight_no: "",
-    name_passenger: "",
-    handle_by: "",
-    free_text: "",
-    status: "",
+    id_sts: "",
+    fullname: "",
+    username: "",
+    password: "",
+    email: "",
+    nohp: "",
+    is_active: "",
   });
 
   //state untuk menangani error dari API
@@ -69,6 +81,9 @@ const Home = () => {
 
   //state untuk menangani success notification
   const [successMessage, setSuccessMessage] = useState("");
+
+  //state untuk menangani show/hide password
+  const [showPassword, setShowPassword] = useState(false);
 
   //fungsi helper untuk menampilkan success message
   const showSuccessMessage = (message: string) => {
@@ -88,46 +103,55 @@ const Home = () => {
   //prepare function for form validation
   const validateForm = () => {
     const newErrors = {
-      belt_no: "",
-      flight_no: "",
-      name_passenger: "",
-      handle_by: "",
-      free_text: "",
-      status: "",
+      id_sts: "",
+      fullname: "",
+      username: "",
+      password: "",
+      email: "",
+      nohp: "",
+      is_active: "",
     };
-    // Check if Belt No is empty
-    if (!form.belt_no.trim()) {
-      newErrors.belt_no = "Belt No is required";
+
+    // Check if Station is selected
+    if (!form.id_sts || form.id_sts === 0) {
+      newErrors.id_sts = "Station is required";
     }
 
-    // Check if Flight No is empty
-    if (!form.flight_no.trim()) {
-      newErrors.flight_no = "Flight No is required";
+    // Check if Full Name is empty
+    if (!form.fullname.trim()) {
+      newErrors.fullname = "Full Name is required";
     }
 
-    // Check if Name Passenger is empty
-    if (!form.name_passenger.trim()) {
-      newErrors.name_passenger = "Name Passenger is required";
+    // Check if Username is empty
+    if (!form.username.trim()) {
+      newErrors.username = "Username is required";
     }
 
-    if (!form.handle_by.trim()) {
-      newErrors.handle_by = "Handle By is required";
+    // Check if Password is empty (only for new users or when password is being changed)
+    if (!form.password.trim() && form.id_usr === 0) {
+      newErrors.password = "Password is required";
     }
 
-    // Check if Free Text is empty
-    if (!form.free_text.trim()) {
-      newErrors.free_text = "Free Text is required";
+    // Check if Email is empty
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      newErrors.email = "Email format is invalid";
     }
 
-    // Check for duplicate belt number in the client side (optional, server will also check)
-    const duplicateBelt = pagings.find(
-      (p) => p.belt_no === form.belt_no && p.id !== form.id
+    // Check if Phone Number is empty
+    if (!form.nohp.trim()) {
+      newErrors.nohp = "Phone Number is required";
+    }
+
+    // Check for duplicate username in the client side (optional, server will also check)
+    const duplicateUser = users.find(
+      (u) => u.username === form.username && u.id_usr !== form.id_usr
     );
 
-    if (duplicateBelt) {
-      // Only show the yellow alert style message with a gentler wording
-      showErrorMessage(
-        `Belt number ${form.belt_no} is already in use. Please choose another belt number.`
+    if (duplicateUser) {
+      setApiError(
+        `Username ${form.username} is already taken. Please choose another username.`
       );
       return false; // Prevent form submission
     }
@@ -137,26 +161,51 @@ const Home = () => {
     return !Object.values(newErrors).some((error) => error);
   };
 
-  //method untuk memanggil api unutk mengambil semua data paging
-  // const fetchPagings = async () => {
-  //     const data = await getPagings();
-  //     setPagings(data);
+  //method untuk memanggil api untuk mengambil semua data user
+  const fetchUsers = async () => {
+    try {
+      console.log("Fetching users...");
+      const response = await getUsers();
+      console.log("API Response:", response);
 
-  //     //hitung jumlah halaman
-  //     setTotalPages(Math.ceil(data.length / ITEM_PER_PAGE));
-  // };
-  const fetchPagings = async () => {
-    const response = await getPagings();
-    // Pastikan data adalah array
-    const data = Array.isArray(response)
-      ? response
-      : Array.isArray(response.data)
-      ? response.data
-      : [];
-    setPagings(data);
+      // Pastikan data adalah array
+      const data = Array.isArray(response)
+        ? response
+        : Array.isArray(response.data)
+        ? response.data
+        : [];
 
-    // Hitung jumlah halaman
-    setTotalPages(Math.ceil(data.length / ITEM_PER_PAGE));
+      console.log("Processed data:", data);
+      setUsers(data);
+
+      // Hitung jumlah halaman
+      setTotalPages(Math.ceil(data.length / ITEM_PER_PAGE));
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setApiError("Failed to fetch users from database");
+    }
+  };
+
+  //method untuk memanggil api untuk mengambil semua data station
+  const fetchStations = async () => {
+    try {
+      console.log("Fetching stations...");
+      const response = await getStations();
+      console.log("Stations API Response:", response);
+
+      // Pastikan data adalah array
+      const data = Array.isArray(response)
+        ? response
+        : Array.isArray(response.data)
+        ? response.data
+        : [];
+
+      console.log("Processed stations data:", data);
+      setStations(data);
+    } catch (error) {
+      console.error("Error fetching stations:", error);
+      setApiError("Failed to fetch stations from database");
+    }
   };
 
   //method untuk menghandle next atau previous halaman
@@ -167,12 +216,12 @@ const Home = () => {
   };
 
   //method untuk memecah data yang akan ditampilkan per 10 records
-  const paginatedPagings = pagings.slice(
+  const paginatedUsers = users.slice(
     (currentPage - 1) * ITEM_PER_PAGE,
     currentPage * ITEM_PER_PAGE
   );
 
-  //panggil method fetchPagings secara background
+  //panggil method fetchUsers secara background
   useEffect(() => {
     //pastikan user masih dalam session 6 jam
     if (!isAuthenticated()) {
@@ -182,48 +231,57 @@ const Home = () => {
     }
     
     //jika user masih authenticated maka tampilkan data
-    fetchPagings();
+    fetchUsers();
+    fetchStations();
   }, [router]);
 
   //=============UPDATE DATA
   //function to populate data to form when edit button is clicked
-  const handleEdit = (paging: {
-    id: number;
-    belt_no: string;
-    flight_no: string;
-    name_passenger: string;
-    handle_by: string;
-    free_text: string;
-    status: number;
+  const handleEdit = (user: {
+    id_usr: number;
+    id_sts: number;
+    fullname: string;
+    username: string;
+    password: string;
+    email: string;
+    nohp: string;
+    is_active: number;
   }) => {
-    setForm(paging);
+    setForm({
+      id_usr: user.id_usr,
+      id_sts: user.id_sts,
+      fullname: user.fullname,
+      username: user.username,
+      password: "", // Don't populate password for security
+      email: user.email,
+      nohp: user.nohp,
+      is_active: user.is_active,
+    });
+    //reset password visibility when editing
+    setShowPassword(false);
   };
 
   //=============DELETE DATA
   //function to delete data when delete button is clicked
-  const handleDelete = async (id: number) => {
-    // Find paging to get details for notification
-    const pagingToDelete = pagings.find((paging) => paging.id === id);
-    const pagingInfo = pagingToDelete
-      ? `"${pagingToDelete.name_passenger}" (Belt ${pagingToDelete.belt_no})`
-      : "Paging data";
+  const handleDelete = async (id_usr: number) => {
+    // Find user to get name for notification
+    const userToDelete = users.find((user) => user.id_usr === id_usr);
+    const userName = userToDelete ? userToDelete.fullname : "User";
 
     const confirmation = window.confirm(
-      `Are you sure you want to delete paging ${pagingInfo}?`
+      `Are you sure you want to delete "${userName}"?`
     );
     if (confirmation) {
       try {
-        await deletePaging(id);
-        showSuccessMessage(
-          `Paging ${pagingInfo} has been deleted successfully!`
-        );
+        await deleteUser(id_usr);
+        showSuccessMessage(`User "${userName}" has been deleted successfully!`);
         //refresh data pada table
-        fetchPagings();
+        fetchUsers();
       } catch (err: unknown) {
         const errorMessage =
           err instanceof Error
             ? err.message
-            : "Sorry, the data cannot be deleted";
+            : "Sorry, the user cannot be deleted";
         showErrorMessage(errorMessage);
       }
     }
@@ -239,35 +297,43 @@ const Home = () => {
     setApiError("");
 
     try {
-      //jika id ada maka update data
-      if (form.id) {
-        await updatePaging(form);
+      console.log("Form data being submitted:", form);
+      //jika id_usr ada maka update data
+      if (form.id_usr) {
+        console.log("Updating user...");
+        await updateUser(form);
         showSuccessMessage(
-          `Paging "${form.name_passenger}" (Belt ${form.belt_no}) has been updated successfully!`
+          `User "${form.fullname}" has been updated successfully!`
         );
       } else {
-        // jika id tidak ada maka insert data
-        await addPaging(form);
+        // jika id_usr tidak ada maka insert data
+        console.log("Adding new user...");
+        await addUser(form);
         showSuccessMessage(
-          `Paging "${form.name_passenger}" (Belt ${form.belt_no}) has been added successfully!`
+          `User "${form.fullname}" has been added successfully!`
         );
       }
       //after completion clear the form
       setForm({
-        id: 0,
-        belt_no: "",
-        flight_no: "",
-        name_passenger: "",
-        handle_by: "",
-        free_text: "",
-        status: 0,
+        id_usr: 0,
+        id_sts: 0,
+        fullname: "",
+        username: "",
+        password: "",
+        email: "",
+        nohp: "",
+        is_active: 1,
       });
+      //reset password visibility
+      setShowPassword(false);
       //refresh data pada table
-      fetchPagings();
+      fetchUsers();
     } catch (err: unknown) {
       // Set friendly message to display to user
       const errorMessage =
-        err instanceof Error ? err.message : "Sorry, the data cannot be saved";
+        err instanceof Error
+          ? err.message
+          : "Sorry, the user data cannot be saved";
       showErrorMessage(errorMessage);
       console.error("API Response Issue:", err);
     }
@@ -294,83 +360,83 @@ const Home = () => {
     }, 1000);
   };
 
-  const handleShow = async (id: number) => {
+  const handleActivate = async (id_usr: number) => {
     // Add confirmation dialog
     const confirmation = window.confirm(
-      "Are you sure you want to mark this as SHOW?"
+      "Are you sure you want to activate this user?"
     );
     if (!confirmation) return;
 
     try {
-      // Find the paging to update
-      const pagingToUpdate = pagings.find((pag) => pag.id === id);
+      // Find the user to update
+      const userToUpdate = users.find((user) => user.id_usr === id_usr);
 
-      if (pagingToUpdate) {
-        // Create updated paging object with status 1 (show)
-        const updatedPaging = {
-          ...pagingToUpdate,
-          status: 1,
+      if (userToUpdate) {
+        // Create updated user object with is_active 1 (active)
+        const updatedUser = {
+          ...userToUpdate,
+          is_active: 1,
         };
 
         // Update in the API
-        await updatePaging(updatedPaging);
+        await updateUser(updatedUser);
 
         // Update local state for immediate UI feedback
-        const updatedPagings = pagings.map((pag) =>
-          pag.id === id ? { ...pag, status: 1 } : pag
+        const updatedUsers = users.map((user) =>
+          user.id_usr === id_usr ? { ...user, is_active: 1 } : user
         );
-        setPagings(updatedPagings);
+        setUsers(updatedUsers);
 
         // Show success message
         showSuccessMessage(
-          `Paging "${pagingToUpdate.name_passenger}" (Belt ${pagingToUpdate.belt_no}) status updated to SHOW successfully!`
+          `User "${userToUpdate.fullname}" has been activated successfully!`
         );
       }
     } catch (err: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "Error updating status";
+        err instanceof Error ? err.message : "Error updating user status";
       showErrorMessage(errorMessage);
-      console.error("Error updating status:", err);
+      console.error("Error updating user status:", err);
     }
   };
 
-  const handleNoShow = async (id: number) => {
+  const handleDeactivate = async (id_usr: number) => {
     // Add confirmation dialog
     const confirmation = window.confirm(
-      "Are you sure you want to mark this as NO SHOW?"
+      "Are you sure you want to deactivate this user?"
     );
     if (!confirmation) return;
 
     try {
-      // Find the paging to update
-      const pagingToUpdate = pagings.find((pag) => pag.id === id);
+      // Find the user to update
+      const userToUpdate = users.find((user) => user.id_usr === id_usr);
 
-      if (pagingToUpdate) {
-        // Create updated paging object with status 0 (no show)
-        const updatedPaging = {
-          ...pagingToUpdate,
-          status: 0,
+      if (userToUpdate) {
+        // Create updated user object with is_active 0 (inactive)
+        const updatedUser = {
+          ...userToUpdate,
+          is_active: 0,
         };
 
         // Update in the API
-        await updatePaging(updatedPaging);
+        await updateUser(updatedUser);
 
         // Update local state for immediate UI feedback
-        const updatedPagings = pagings.map((pag) =>
-          pag.id === id ? { ...pag, status: 0 } : pag
+        const updatedUsers = users.map((user) =>
+          user.id_usr === id_usr ? { ...user, is_active: 0 } : user
         );
-        setPagings(updatedPagings);
+        setUsers(updatedUsers);
 
         // Show success message
         showSuccessMessage(
-          `Paging "${pagingToUpdate.name_passenger}" (Belt ${pagingToUpdate.belt_no}) status updated to NO SHOW successfully!`
+          `User "${userToUpdate.fullname}" has been deactivated successfully!`
         );
       }
     } catch (err: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "Error updating status";
+        err instanceof Error ? err.message : "Error updating user status";
       showErrorMessage(errorMessage);
-      console.error("Error updating status:", err);
+      console.error("Error updating user status:", err);
     }
   };
 
@@ -414,7 +480,7 @@ const Home = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">
-                  JAS Paging Management
+                  JAS User Management
                 </h1>
               </div>
             </div>
@@ -546,7 +612,7 @@ const Home = () => {
               ✏️
             </span>
             <h3 className="text-xl font-bold text-white">
-              {form.id ? "Edit Paging Entry" : "Add New Paging Entry"}
+              {form.id_usr ? "Edit User" : "Add New User"}
             </h3>
           </div>
 
@@ -557,126 +623,207 @@ const Home = () => {
               handleSubmit();
             }}
           >
-            {/* First Row: Belt No, Flight No, Handle By */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {/* Belt No */}
+            {/* Row 1: Station, Full Name, Username */}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              {/* Station */}
               <div className="flex flex-col">
                 <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Belt No
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter Belt No"
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
-                  value={form.belt_no}
-                  onChange={(e) =>
-                    setForm({ ...form, belt_no: e.target.value })
-                  }
-                />
-                {error.belt_no && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
-                    <span>{error.belt_no}</span>
-                  </p>
-                )}
-              </div>
-
-              {/* Flight No */}
-              <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Flight No
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter Flight No"
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
-                  value={form.flight_no}
-                  onChange={(e) =>
-                    setForm({ ...form, flight_no: e.target.value })
-                  }
-                />
-                {error.flight_no && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
-                    <span>{error.flight_no}</span>
-                  </p>
-                )}
-              </div>
-
-              {/* Handle By */}
-              <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Handle By
+                  Station
                 </label>
                 <select
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200 appearance-none"
-                  value={form.handle_by}
+                  className="w-full px-4 py-3 bg-slate-700/30 border border-slate-600/30 
+                 rounded-lg text-white focus:outline-none focus:border-cyan-500/50 
+                 focus:bg-slate-700/50 transition-all duration-200 appearance-none"
+                  value={form.id_sts}
                   onChange={(e) =>
-                    setForm({ ...form, handle_by: e.target.value })
+                    setForm({ ...form, id_sts: parseInt(e.target.value) })
                   }
-                  style={{ color: form.handle_by ? "white" : "#9CA3AF" }}
+                  style={{ color: form.id_sts ? "white" : "#9CA3AF" }}
                 >
-                  <option value="" disabled hidden className="text-gray-400">
-                    Select Handler
+                  <option value={0} disabled hidden className="text-gray-400">
+                    Select Station
                   </option>
-                  <option value="Jas" className="text-black bg-white">
-                    Jas
-                  </option>
-                  <option value="Gapura" className="text-black bg-white">
-                    Gapura
-                  </option>
+                  {stations.map((station) => (
+                    <option
+                      key={station.id_sts}
+                      value={station.id_sts}
+                      className="text-black bg-white"
+                    >
+                      {station.code_station}
+                    </option>
+                  ))}
                 </select>
-                {error.handle_by && (
+                {error.id_sts && (
                   <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
                     <span>⚠️</span>
-                    <span>{error.handle_by}</span>
+                    <span>{error.id_sts}</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Full Name */}
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter Full Name"
+                  className="w-full px-4 py-3 bg-slate-700/30 border border-slate-600/30 
+                 rounded-lg text-white placeholder-gray-400 focus:outline-none 
+                 focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                  value={form.fullname}
+                  onChange={(e) =>
+                    setForm({ ...form, fullname: e.target.value })
+                  }
+                />
+                {error.fullname && (
+                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
+                    <span>⚠️</span>
+                    <span>{error.fullname}</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Username */}
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter Username"
+                  className="w-full px-4 py-3 bg-slate-700/30 border border-slate-600/30 
+                 rounded-lg text-white placeholder-gray-400 focus:outline-none 
+                 focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                  value={form.username}
+                  onChange={(e) =>
+                    setForm({ ...form, username: e.target.value })
+                  }
+                />
+                {error.username && (
+                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
+                    <span>⚠️</span>
+                    <span>{error.username}</span>
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Second Row: Passenger Name and Default Text */}
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {/* Passenger Name */}
+            {/* Row 2: Password, Email, Phone Number */}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 mt-6">
+              {/* Password */}
               <div className="flex flex-col">
                 <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Passenger Name
+                  Password
                 </label>
-                <textarea
-                  placeholder="Enter Passenger Name"
-                  rows={4}
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200 resize-vertical"
-                  value={form.name_passenger}
-                  onChange={(e) =>
-                    setForm({ ...form, name_passenger: e.target.value })
-                  }
-                />
-                {error.name_passenger && (
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder={
+                      form.id_usr
+                        ? "Leave blank to keep current password"
+                        : "Enter Password"
+                    }
+                    className="w-full px-4 py-3 pr-12 bg-slate-700/30 border border-slate-600/30 
+                   rounded-lg text-white placeholder-gray-400 focus:outline-none 
+                   focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm({ ...form, password: e.target.value })
+                    }
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-200 focus:outline-none"
+                    tabIndex={-1}
+                  >
+                    <FontAwesomeIcon
+                      icon={showPassword ? faEyeSlash : faEye}
+                      className="w-5 h-5"
+                    />
+                  </button>
+                </div>
+                {error.password && (
                   <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
                     <span>⚠️</span>
-                    <span>{error.name_passenger}</span>
+                    <span>{error.password}</span>
                   </p>
                 )}
               </div>
 
-              {/* Default Text */}
+              {/* Email */}
               <div className="flex flex-col">
                 <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Default Text
+                  Email
                 </label>
-                <textarea
-                  placeholder="Enter Default Text"
-                  rows={4}
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200 resize-vertical"
-                  value={form.free_text}
-                  onChange={(e) =>
-                    setForm({ ...form, free_text: e.target.value })
-                  }
+                <input
+                  type="email"
+                  placeholder="Enter Email"
+                  className="w-full px-4 py-3 bg-slate-700/30 border border-slate-600/30 
+                 rounded-lg text-white placeholder-gray-400 focus:outline-none 
+                 focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
-                {error.free_text && (
+                {error.email && (
                   <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
                     <span>⚠️</span>
-                    <span>{error.free_text}</span>
+                    <span>{error.email}</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Phone Number */}
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  placeholder="Enter Phone Number"
+                  className="w-full px-4 py-3 bg-slate-700/30 border border-slate-600/30 
+                 rounded-lg text-white placeholder-gray-400 focus:outline-none 
+                 focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                  value={form.nohp}
+                  onChange={(e) => setForm({ ...form, nohp: e.target.value })}
+                />
+                {error.nohp && (
+                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
+                    <span>⚠️</span>
+                    <span>{error.nohp}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Row 3: Status */}
+            <div className="grid grid-cols-1 gap-6 mt-6">
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
+                  Status
+                </label>
+                <select
+                  className="w-full px-4 py-3 bg-slate-700/30 border border-slate-600/30 
+                 rounded-lg text-white focus:outline-none focus:border-cyan-500/50 
+                 focus:bg-slate-700/50 transition-all duration-200 appearance-none"
+                  value={form.is_active}
+                  onChange={(e) =>
+                    setForm({ ...form, is_active: parseInt(e.target.value) })
+                  }
+                >
+                  <option value={1} className="text-black bg-white">
+                    Active
+                  </option>
+                  <option value={0} className="text-black bg-white">
+                    Inactive
+                  </option>
+                </select>
+                {error.is_active && (
+                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
+                    <span>⚠️</span>
+                    <span>{error.is_active}</span>
                   </p>
                 )}
               </div>
@@ -715,7 +862,7 @@ const Home = () => {
                 type="submit"
                 className="inline-flex items-center px-6 py-3 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors duration-200 text-sm font-medium"
               >
-                {form.id ? "Update Paging" : "Add Paging"}
+                {form.id_usr ? "Update User" : "Add User"}
               </button>
             </div>
           </form>
@@ -726,9 +873,9 @@ const Home = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <h3 className="text-xl font-bold text-white flex items-center gap-2">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-700/40 border border-white/10">
-                📋
+                👨🏻
               </span>
-              Paging Management
+              User Management
             </h3>
           </div>
 
@@ -740,19 +887,19 @@ const Home = () => {
                     ID
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Belt No
+                    Station ID
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Flight No
+                    Full Name
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Passenger
+                    Username
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Handle By
+                    Email
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Default Text
+                    Phone Number
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                     Status
@@ -763,62 +910,47 @@ const Home = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedPagings.length > 0 ? (
-                  paginatedPagings.map((pag) => (
+                {paginatedUsers.length > 0 ? (
+                  paginatedUsers.map((user) => (
                     <tr
-                      key={pag.id}
+                      key={user.id_usr}
                       className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200"
                     >
-                      <td className="py-4 px-4 text-gray-400">{pag.id}</td>
+                      <td className="py-4 px-4 text-gray-400">{user.id_usr}</td>
+                      <td className="py-4 px-4 text-gray-400">{user.id_sts}</td>
                       <td className="py-4 px-4">
                         <div className="font-bold text-cyan-400">
-                          {pag.belt_no}
+                          {user.fullname}
                         </div>
                       </td>
                       <td className="py-4 px-4">
                         <div className="text-white font-medium">
-                          {pag.flight_no}
+                          {user.username}
                         </div>
                       </td>
                       <td className="py-4 px-4">
                         <div className="text-white font-medium">
-                          {pag.name_passenger}
+                          {user.email}
                         </div>
                       </td>
                       <td className="py-4 px-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-                            pag.handle_by === "Jas"
-                              ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                              : "bg-purple-500/20 text-purple-400 border-purple-500/30"
-                          }`}
-                        >
-                          {pag.handle_by}
-                        </span>
-                      </td>
-                      <td className="py-4 px-4">
-                        <div
-                          className="text-gray-300 text-sm max-w-xs truncate"
-                          title={pag.free_text}
-                        >
-                          {pag.free_text}
-                        </div>
+                        <div className="text-gray-300 text-sm">{user.nohp}</div>
                       </td>
                       <td className="py-4 px-4">
                         <span
                           className={`inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold border whitespace-nowrap ${
-                            pag.status === 1
+                            user.is_active === 1
                               ? "bg-green-500/20 text-green-400 border-green-500/30"
                               : "bg-red-500/20 text-red-400 border-red-500/30"
                           }`}
                         >
-                          {pag.status === 1 ? "SHOW" : "NO SHOW"}
+                          {user.is_active === 1 ? "ACTIVE" : "INACTIVE"}
                         </span>
                       </td>
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => handleEdit(pag)}
+                            onClick={() => handleEdit(user)}
                             className="inline-flex items-center px-3 py-1 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-colors duration-200 text-xs font-medium"
                             title="Edit"
                           >
@@ -826,7 +958,7 @@ const Home = () => {
                             Edit
                           </button>
                           <button
-                            onClick={() => handleDelete(pag.id)}
+                            onClick={() => handleDelete(user.id_usr)}
                             className="inline-flex items-center px-3 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-colors duration-200 text-xs font-medium"
                             title="Delete"
                           >
@@ -834,23 +966,23 @@ const Home = () => {
                             Delete
                           </button>
                           <button
-                            onClick={() => handleShow(pag.id)}
+                            onClick={() => handleActivate(user.id_usr)}
                             className="inline-flex items-center px-3 py-1 rounded-lg bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 transition-colors duration-200 text-xs font-medium"
-                            title="Show"
+                            title="Activate"
                           >
                             <FontAwesomeIcon icon={faEye} className="mr-1" />
-                            Show
+                            Activate
                           </button>
                           <button
-                            onClick={() => handleNoShow(pag.id)}
+                            onClick={() => handleDeactivate(user.id_usr)}
                             className="inline-flex items-center px-3 py-1 rounded-lg bg-gray-500/20 text-gray-400 border border-gray-500/30 hover:bg-gray-500/30 transition-colors duration-200 text-xs font-medium"
-                            title="No Show"
+                            title="Deactivate"
                           >
                             <FontAwesomeIcon
                               icon={faEyeSlash}
                               className="mr-1"
                             />
-                            Hide
+                            Deactivate
                           </button>
                         </div>
                       </td>
@@ -858,9 +990,9 @@ const Home = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={8} className="py-8 px-4 text-center">
+                    <td colSpan={7} className="py-8 px-4 text-center">
                       <div className="text-gray-400">
-                        No paging data available
+                        No user data available
                       </div>
                     </td>
                   </tr>
@@ -872,11 +1004,11 @@ const Home = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-6 pt-4 border-t border-white/10 gap-4">
             <div className="text-sm text-gray-400">
-              {pagings.length > 0 ? (
+              {users.length > 0 ? (
                 <>
                   Showing {(currentPage - 1) * ITEM_PER_PAGE + 1} to{" "}
-                  {Math.min(currentPage * ITEM_PER_PAGE, pagings.length)} of{" "}
-                  {pagings.length} entries
+                  {Math.min(currentPage * ITEM_PER_PAGE, users.length)} of{" "}
+                  {users.length} entries
                 </>
               ) : (
                 <>Showing 0 to 0 of 0 entries</>
@@ -904,7 +1036,7 @@ const Home = () => {
               </button>
 
               <div className="flex items-center gap-1">
-                {pagings.length === 0 ? (
+                {users.length === 0 ? (
                   <button className="w-8 h-8 flex items-center justify-center rounded-md text-sm bg-slate-700/30 text-white font-medium shadow-sm">
                     1
                   </button>

@@ -26,16 +26,17 @@ const LoginPage = () => {
       const data = await response.json();
 
       if(data.logged_in === "1") {
-        //jika berhasil login maka buat cookie dan redirect ke halaman crud
-        Cookies.set("logged_in", "1", { expires: 6/24 });
+        //if login successful, create cookie with login time and redirect to crud page
+        Cookies.set("logged_in", "1", { expires: 6/24 }); // 6 hours
+        Cookies.set("login_time", data.login_time.toString(), { expires: 6/24 }); // Store login timestamp
         router.push("/crud");
-      } else { // error ketika salah username atau password
-        setError("Username atau Password Anda Salah");
+      } else { // error when wrong username or password
+        setError("Invalid Username or Password");
       }
 
     } catch (error) {
       console.error("Login error:", error);
-      setError("Ada kesalah ketika login");
+      setError("An error occurred during login");
     }
   }
 
@@ -96,7 +97,7 @@ const LoginPage = () => {
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-2 text-blue-300 opacity-90 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-                  aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3l18 18"/><path d="M10.58 10.58a2 2 0 0 0 2.84 2.84"/><path d="M16.1 16.1A10.94 10.94 0 0 1 12 18c-5 0-9-4-10-6a11.54 11.54 0 0 1 5-5"/><path d="M14.12 5.12A10.94 10.94 0 0 1 22 12c-1 2-5 6-10 6a10.93 10.93 0 0 1-2-.18"/></svg>
