@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   try {
     const users = await prisma.tb_user.findMany({
       orderBy: {
-        id_usr: "desc",
+        id_usr: "asc",
       },
     });
     return NextResponse.json(users);

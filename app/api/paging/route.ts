@@ -81,7 +81,11 @@ export async function GET(request: Request) {
         //lakukan validasi api key
         validateApiKey(request);
 
-        const pagings = await prisma.tb_paging.findMany();
+        const pagings = await prisma.tb_paging.findMany({
+            orderBy: {
+                id: "asc",
+            },
+        });
         return NextResponse.json(pagings, {status: 200});
     } catch (error: unknown) {
         //jika terjadi error maka tampilkan error
