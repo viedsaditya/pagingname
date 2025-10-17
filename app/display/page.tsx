@@ -244,11 +244,11 @@ function PagingScreenContent() {
                 />
               ) : (
                 <Image
-                  src="/Arrival.png"
+                  src="/psw.png"
                   alt="Arrival Icon"
-                  width={300}
-                  height={150}
-                  className="max-h-28 max-w-56 object-contain"
+                  width={450}
+                  height={225}
+                  className="max-h-40 max-w-xl object-contain"
                 />
               )}
             </div>

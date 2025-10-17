@@ -887,7 +887,7 @@ const Home = () => {
                     ID
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Station ID
+                    Station
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                     Full Name
@@ -917,7 +917,9 @@ const Home = () => {
                       className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200"
                     >
                       <td className="py-4 px-4 text-gray-400">{user.id_usr}</td>
-                      <td className="py-4 px-4 text-gray-400">{user.id_sts}</td>
+                      <td className="py-4 px-4 text-gray-400">
+                        {stations.find((station) => station.id_sts === user.id_sts)?.code_station || user.id_sts}
+                      </td>
                       <td className="py-4 px-4">
                         <div className="font-bold text-cyan-400">
                           {user.fullname}
@@ -1026,7 +1028,7 @@ const Home = () => {
                   width="16"
                   height="16"
                   fill="currentColor"
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     fillRule="evenodd"
@@ -1085,7 +1087,7 @@ const Home = () => {
                   width="16"
                   height="16"
                   fill="currentColor"
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     fillRule="evenodd"
