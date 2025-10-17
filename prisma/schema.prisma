@@ -46,12 +46,4 @@ model tb_station {
   name_station   String
   country        String
   is_active      Int
-  user_create_sts Int
-  date_create_sts      DateTime? @default(now())
-  user_update_sts      Int?
-  date_update_sts      DateTime?
-  user_deactivate_sts  Int?
-  date_deactivate_sts  DateTime?
-  user_activate_sts    Int?
-  date_activate_sts    DateTime?
 }

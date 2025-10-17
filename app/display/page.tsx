@@ -136,10 +136,12 @@ function PagingScreenContent() {
       title: "ATTENTION",
       description: (
         <>
-          <span className="block mb-3">The Following Passenger(s)</span>
-          of <strong>{sqCode}</strong> /{" "}
-          {isClient ? currentDate : ""}{" "}
-          :
+          <span className="whitespace-nowrap flex justify-center items-center">The Following Passenger(s) of &thinsp;<strong>{sqCode}</strong>&thinsp; / {isClient ? currentDate : ""} :</span>
+        </>
+      ),
+      instruction: (
+        <>
+          <span className="whitespace-nowrap flex justify-center items-center">Please Exceed The {handleBy?.toUpperCase() || 'JAS'} Counter</span>
         </>
       ),
     },
@@ -148,14 +150,16 @@ function PagingScreenContent() {
       title: "PERHATIAN",
       description: (
         <>
-          <span className="block mb-3">Penumpang Berikut</span>
-          Dari <strong>{sqCode}</strong> /{" "}
-          {isClient ? currentDate : ""}{" "}
-          :
+          <span className="whitespace-nowrap flex justify-center items-center">Penumpang Berikut Dari &thinsp;<strong>{sqCode}</strong>&thinsp; / {isClient ? currentDate : ""} :</span>
+        </>
+      ),
+      instruction: (
+        <>
+          <span className="whitespace-nowrap flex justify-center items-center">Silahkan Mendatangani {handleBy?.toUpperCase() || 'JAS'} Konter</span>
         </>
       ),
     },
-  ], [sqCode, isClient, currentDate]);
+  ], [sqCode, isClient, currentDate, handleBy]);
 
   return (
     <div className="relative h-screen w-screen flex flex-col overflow-hidden" suppressHydrationWarning>
@@ -184,11 +188,11 @@ function PagingScreenContent() {
       </div>
 
       {/* Clean and Minimal Header with standardized sizes */}
-      <div className="relative z-20 px-6 py-4 border-b border-gray-700 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 backdrop-blur-md">
+      <div className="relative z-20 px-8 py-8 border-b border-gray-700 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 backdrop-blur-md">
         <div className="grid grid-cols-3 items-center">
           {/* JAS or Gapura Logo based on handle_by value - Fixed width column */}
           <div className="flex items-center justify-start">
-            <div className="bg-white/50 p-4 rounded w-48 h-24 flex items-center justify-center">
+            <div className="bg-white/50 p-6 rounded-xl w-64 h-32 flex items-center justify-center">
               <Image
                 src={
                   handleBy?.toLowerCase() === "gapura"
@@ -196,9 +200,9 @@ function PagingScreenContent() {
                     : "/Logo_JAS.png"
                 }
                 alt={`${handleBy} Logo`}
-                width={200}
-                height={100}
-                className="max-h-20 max-w-44 object-contain"
+                width={300}
+                height={150}
+                className="max-h-28 max-w-56 object-contain"
               />
             </div>
           </div>
@@ -207,15 +211,15 @@ function PagingScreenContent() {
           <div className="flex justify-center items-center text-white">
             <ClientOnly fallback={
               <div className="text-center">
-                <div className="text-3xl font-semibold">00:00</div>
-                <div className="text-xl text-cyan-400">Loading... | CGK</div>
+                <div className="text-5xl font-semibold">00:00</div>
+                <div className="text-2xl text-cyan-400">Loading... | CGK</div>
               </div>
             }>
               <div className="text-center">
-                <div className="text-3xl font-semibold" suppressHydrationWarning>
+                <div className="text-5xl font-semibold" suppressHydrationWarning>
                   {currentTime}
                 </div>
-                <div className="text-xl text-cyan-400" suppressHydrationWarning>
+                <div className="text-2xl text-cyan-400" suppressHydrationWarning>
                   {currentDate} | CGK
                 </div>
               </div>
@@ -224,14 +228,14 @@ function PagingScreenContent() {
 
           {/* Airline Logo or Icon - Fixed width column */}
           <div className="flex items-center justify-end">
-            <div className="bg-white/50 p-4 rounded w-48 h-24 flex items-center justify-center">
+            <div className="bg-white/50 p-6 rounded-xl w-64 h-32 flex items-center justify-center">
               {beltNo && sqCode ? (
                 <Image
                   src={`/airlines/${sqCode?.substring(0, 2) || ""}.png`}
                   alt={`${sqCode?.substring(0, 2) || ""} Logo`}
-                  width={200}
-                  height={100}
-                  className="max-h-16 max-w-36 object-contain"
+                  width={300}
+                  height={150}
+                  className="max-h-24 max-w-52 object-contain"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = "/airlines/EY.png";
@@ -241,9 +245,9 @@ function PagingScreenContent() {
                 <Image
                   src="/Arrival.png"
                   alt="Arrival Icon"
-                  width={200}
-                  height={100}
-                  className="max-h-20 max-w-44 object-contain"
+                  width={300}
+                  height={150}
+                  className="max-h-28 max-w-56 object-contain"
                 />
               )}
             </div>
@@ -367,35 +371,57 @@ function PagingScreenContent() {
           <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-cyan-400/30 rounded-bl-xl"></div>
           <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-cyan-400/30 rounded-br-xl"></div>
         </div>
+
+        {/* Instruction Text Below Box */}
+        <div className="w-full max-w-5xl text-center mt-6">
+          <ClientOnly>
+            <AnimatePresence mode="wait">
+              {beltNo && sqCode ? (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {/* <p className="text-3xl md:text-5xl text-gray-100 mb-1 mt-5" suppressHydrationWarning>
+                    {headerTexts[index].instruction}
+                  </p> */}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </ClientOnly>
+        </div>
       </div>
 
       {/* Clean and Minimal Running Text Footer */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 border-t border-gray-700 py-4 overflow-hidden">
-        <div className="animate-marquee flex items-center space-x-8">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 border-t border-gray-700 py-6 overflow-hidden">
+        <div className="animate-marquee flex items-center">
+         <marquee scrollamount="5">
           {/* English Message */}
-          <span className="flex items-center space-x-2">
-            <span className="text-xl md:text-2xl text-cyan-300 font-medium whitespace-nowrap">
-              PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
-              {beltNo
-                ? `IN FRONT OF BELT 1`
-                : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
-              OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
-            </span>
+          <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
+            PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
+            {beltNo
+              ? `IN FRONT OF BELT 1`
+              : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
+            OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
           </span>
 
           {/* Separator */}
-          <span className="text-cyan-400 text-2xl">|</span>
+          <span className="text-cyan-400 text-4xl mr-16">|</span>
 
           {/* Indonesian Message */}
-          <span className="flex items-center space-x-2">
-            <span className="text-xl md:text-2xl text-cyan-300 font-medium whitespace-nowrap">
-              HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
-              {beltNo
-                ? `DI DEPAN BELT 1`
-                : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
-              ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
-            </span>
+          <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
+            HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
+            {beltNo
+              ? `DI DEPAN BELT 1`
+              : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
+            ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
           </span>
+
+          {/* Separator */}
+          <span className="text-cyan-400 text-4xl mr-16">|</span>
+        </marquee>
         </div>
       </div>
     </div>
