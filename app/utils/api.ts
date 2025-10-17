@@ -12,6 +12,7 @@ const getBaseURL = () => {
 const API_URL = "/api/paging";
 const USER_API_URL = "/api/users";
 const STATION_API_URL = "/api/stations";
+const FLIGHTNOS_API_URL = "/api/flightnos";
 
 //tambahkan api key
 const API_KEY = "rahasia";
@@ -167,4 +168,28 @@ export const getStations=async()=> {
         throw new Error(`Error accessing Station API: ${response.status}`);
     }
     return response.json();
+}
+
+// ======== FLIGHT NO LOOKUP ========
+export const getFlightNos = async (params?: {
+  station?: string;
+  start_date?: string; // YYYY-MM-DD
+  to_date?: string; // YYYY-MM-DD
+  source?: string;
+}) => {
+  const apiUrlBase = typeof window !== 'undefined' ? FLIGHTNOS_API_URL : `${getBaseURL()}${FLIGHTNOS_API_URL}`;
+  const url = new URL(apiUrlBase, getBaseURL());
+  if (params?.station) url.searchParams.set('station', params.station);
+  if (params?.start_date) url.searchParams.set('start_date', params.start_date);
+  if (params?.to_date) url.searchParams.set('to_date', params.to_date);
+  if (params?.source) url.searchParams.set('source', params.source);
+
+  const response = await fetch(typeof window !== 'undefined' ? `${FLIGHTNOS_API_URL}${url.search}` : url.toString(), {
+    headers: defaultHeaders,
+    cache: 'no-store',
+  });
+  if (!response.ok) {
+    throw new Error(`Error accessing FlightNos API: ${response.status}`);
+  }
+  return response.json();
 }

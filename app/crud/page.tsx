@@ -69,6 +69,7 @@ const Home = () => {
 
   //state untuk menangani success notification
   const [successMessage, setSuccessMessage] = useState("");
+  const [flightNoOptions, setFlightNoOptions] = useState<string[]>([]);
 
   //fungsi helper untuk menampilkan success message
   const showSuccessMessage = (message: string) => {
@@ -582,7 +583,7 @@ const Home = () => {
               </div>
 
               {/* Flight No */}
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col">
                 <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
                   Flight No
                 </label>
@@ -595,6 +596,64 @@ const Home = () => {
                     setForm({ ...form, flight_no: e.target.value })
                   }
                 />
+                {error.flight_no && (
+                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
+                    <span>⚠️</span>
+                    <span>{error.flight_no}</span>
+                  </p>
+                )}
+              </div> */}
+              <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
+                  Flight No
+                </label>
+                <input
+                  list="flightno-options"
+                  type="text"
+                  placeholder="Search or select Flight No"
+                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                  value={form.flight_no}
+                  onFocus={async () => {
+                    try {
+                      const today = new Date();
+                      const yyyy = today.getFullYear();
+                      const mm = String(today.getMonth() + 1).padStart(2, '0');
+                      const dd = String(today.getDate()).padStart(2, '0');
+                      const date = `${yyyy}-${mm}-${dd}`;
+                      const resp = await fetch(`/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`, { cache: 'no-store' });
+                      if (resp.ok) {
+                        const json = await resp.json();
+                        const list: string[] = Array.isArray(json?.flightNos) ? json.flightNos : [];
+                        setFlightNoOptions(list);
+                      }
+                    } catch {}
+                  }}
+                  onChange={async (e) => {
+                    const value = e.target.value;
+                    setForm({ ...form, flight_no: value });
+                    try {
+                      // Fetch suggestions for today's date by default
+                      const today = new Date();
+                      const yyyy = today.getFullYear();
+                      const mm = String(today.getMonth() + 1).padStart(2, '0');
+                      const dd = String(today.getDate()).padStart(2, '0');
+                      const date = `${yyyy}-${mm}-${dd}`;
+                      const resp = await fetch(`/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`, { cache: 'no-store' });
+                      if (resp.ok) {
+                        const json = await resp.json();
+                        const list: string[] = Array.isArray(json?.flightNos) ? json.flightNos : [];
+                        setFlightNoOptions(list);
+                      }
+                    } catch (err) {
+                      // ignore suggestions errors
+                    }
+                  }}
+                />
+                <datalist id="flightno-options">
+                  {flightNoOptions.map((opt) => (
+                    <option key={opt} value={opt} />
+                  ))}
+                </datalist>
                 {error.flight_no && (
                   <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
                     <span>⚠️</span>

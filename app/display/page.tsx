@@ -227,7 +227,8 @@ function PagingScreenContent() {
           </div>
 
           {/* Airline Logo or Icon - Fixed width column */}
-          <div className="flex items-center justify-end">
+          {handleBy?.toLowerCase() !== "gapura" && (
+          <div className="sqCode flex items-center justify-end">
             <div className="bg-white/50 p-6 rounded-xl w-64 h-32 flex items-center justify-center">
               {beltNo && sqCode ? (
                 <Image
@@ -252,6 +253,7 @@ function PagingScreenContent() {
               )}
             </div>
           </div>
+          )}
         </div>
       </div>
 
@@ -397,7 +399,7 @@ function PagingScreenContent() {
       {/* Clean and Minimal Running Text Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 border-t border-gray-700 py-6 overflow-hidden">
         <div className="animate-marquee flex items-center">
-         <marquee scrollamount="5">
+         <marquee scrollamount="12" scrolldelay="20" direction="left">
           {/* English Message */}
           <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
             PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
