@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getPagings } from "../utils/api";
 
 import ClientOnly from "../components/ClientOnly";
+import TextType from "../components/TextType";
 
 function PagingScreenContent() {
   const searchParams = useSearchParams();
@@ -348,20 +349,30 @@ function PagingScreenContent() {
             ) : (
               <div className="flex flex-col items-center justify-center flex-1 text-white text-center min-h-[400px] my-auto mt-30">
                 {freeText ? (
-                  <p className="text-6xl font-bold text-white whitespace-pre-line">
-                    {freeText}
-                  </p>
+                  <TextType 
+                    text={freeText}
+                    typingSpeed={120}
+                    pauseDuration={3000}
+                    deletingSpeed={60}
+                    showCursor={true}
+                    cursorCharacter="|"
+                    loop={true}
+                    className="text-6xl font-bold text-white whitespace-pre-line"
+                  />
                 ) : (
-                  <>
-                    <p className="text-6xl font-bold mb-4">
-                      PLEASE BE CAREFUL WHILE COLLECTING THE BAG AND DO NOT TAKE
-                      THE WRONG BAGGAGE
-                    </p>
-                    <p className="text-5xl">
-                      OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR
-                      CONVEYOR BELT NO.6
-                    </p>
-                  </>
+                  <TextType 
+                    text={[
+                      "PLEASE BE CAREFUL WHILE COLLECTING THE BAG AND DO NOT TAKE THE WRONG BAGGAGE",
+                      "OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR CONVEYOR BELT NO.6"
+                    ]}
+                    typingSpeed={100}
+                    pauseDuration={3000}
+                    deletingSpeed={50}
+                    showCursor={true}
+                    cursorCharacter="|"
+                    loop={true}
+                    className="text-6xl font-bold"
+                  />
                 )}
               </div>
             )}
