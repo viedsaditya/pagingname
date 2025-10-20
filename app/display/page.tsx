@@ -460,6 +460,23 @@ function PagingScreenContent() {
             </span>
             {/* Separator */}
             <span className="text-cyan-400 text-4xl mr-16">|</span>
+            {/* Repeat the messages for seamless marquee */}
+            <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
+              PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
+              {beltNo
+                ? `IN FRONT OF BELT 1`
+                : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
+              OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
+            </span>
+            <span className="text-cyan-400 text-4xl mr-16">|</span>
+            <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
+              HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
+              {beltNo
+                ? `DI DEPAN BELT 1`
+                : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
+              ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
+            </span>
+            <span className="text-cyan-400 text-4xl mr-16">|</span>
           </div>
         </div>
       </div>
