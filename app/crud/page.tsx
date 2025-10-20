@@ -644,7 +644,7 @@ const Home = () => {
                         const list: string[] = Array.isArray(json?.flightNos) ? json.flightNos : [];
                         setFlightNoOptions(list);
                       }
-                    } catch (err) {
+                    } catch {
                       // ignore suggestions errors
                     }
                   }}
@@ -796,7 +796,7 @@ const Home = () => {
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    ID
+                    NO
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                     Belt No
@@ -823,16 +823,14 @@ const Home = () => {
               </thead>
               <tbody>
                 {paginatedPagings.length > 0 ? (
-                  paginatedPagings.map((pag) => (
+                  paginatedPagings.map((pag, idx) => (
                     <tr
                       key={pag.id}
                       className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200"
                     >
-                      <td className="py-4 px-4 text-gray-400">{pag.id}</td>
+                      <td className="py-4 px-4 text-gray-400">{(currentPage - 1) * ITEM_PER_PAGE + idx + 1}</td>
                       <td className="py-4 px-4">
-                        <div className="font-bold text-cyan-400">
-                          {pag.belt_no}
-                        </div>
+                        <div className="font-bold text-cyan-400">{pag.belt_no}</div>
                       </td>
                       <td className="py-4 px-4">
                         <div className="text-white font-medium">
@@ -953,7 +951,7 @@ const Home = () => {
                   width="16"
                   height="16"
                   fill="currentColor"
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     fillRule="evenodd"
@@ -1012,7 +1010,7 @@ const Home = () => {
                   width="16"
                   height="16"
                   fill="currentColor"
-                  viewBox="0 0 16 16"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     fillRule="evenodd"

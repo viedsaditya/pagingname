@@ -22,6 +22,7 @@ interface TextTypeProps {
   onSentenceComplete?: (sentence: string, index: number) => void;
   startOnVisible?: boolean;
   reverseMode?: boolean;
+  noDelete?: boolean;
 }
 
 const TextType = ({
@@ -43,6 +44,7 @@ const TextType = ({
   onSentenceComplete,
   startOnVisible = false,
   reverseMode = false,
+  noDelete = false,
   ...props
 }: TextTypeProps & React.HTMLAttributes<HTMLElement>) => {
   const [displayedText, setDisplayedText] = useState('');
@@ -135,8 +137,33 @@ const TextType = ({
             variableSpeed ? getRandomSpeed() : typingSpeed
           );
         } else if (textArray.length > 1) {
+          if (noDelete) {
+            // Mode tanpa menghapus: langsung lanjut ke text berikutnya atau reset
+            timeout = setTimeout(() => {
+              if (currentTextIndex === textArray.length - 1) {
+                // Sudah di text terakhir, reset semua
+                if (loop) {
+                  setDisplayedText('');
+                  setCurrentTextIndex(0);
+                  setCurrentCharIndex(0);
+                }
+              } else {
+                // Lanjut ke text berikutnya dengan menambah newline
+                setDisplayedText(prev => prev + '\n');
+                setCurrentTextIndex(prev => prev + 1);
+                setCurrentCharIndex(0);
+              }
+            }, pauseDuration);
+          } else {
+            timeout = setTimeout(() => {
+              setIsDeleting(true);
+            }, pauseDuration);
+          }
+        } else if (textArray.length === 1 && noDelete && loop) {
+          // Single text dengan noDelete dan loop: langsung reset dan mulai lagi
           timeout = setTimeout(() => {
-            setIsDeleting(true);
+            setDisplayedText('');
+            setCurrentCharIndex(0);
           }, pauseDuration);
         }
       }
@@ -164,7 +191,8 @@ const TextType = ({
     reverseMode,
     variableSpeed,
     getRandomSpeed,
-    onSentenceComplete
+    onSentenceComplete,
+    noDelete
   ]);
 
   const shouldHideCursor =

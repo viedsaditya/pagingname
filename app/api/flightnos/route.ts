@@ -50,7 +50,8 @@ export async function GET(req: NextRequest) {
     const data = await resp.json();
 
     // Normalize response: try to collect distinct flight numbers (robust)
-    const extractFromArray = (arr: any[]): string[] => {
+    type FlightItem = { [key: string]: unknown };
+    const extractFromArray = (arr: unknown[]): string[] => {
       const out: string[] = [];
       for (const item of arr) {
         if (typeof item === "string") {
@@ -58,20 +59,21 @@ export async function GET(req: NextRequest) {
           continue;
         }
         if (item && typeof item === "object") {
+          const obj = item as FlightItem;
           // Try common keys
           const candidates = [
-            item.flight_no,
-            item.flightNo,
-            item.flight,
-            item.FLIGHT_NO,
-            item.FLIGHT,
+            obj["flight_no"],
+            obj["flightNo"],
+            obj["flight"],
+            obj["FLIGHT_NO"],
+            obj["FLIGHT"],
           ].filter(Boolean);
           if (candidates.length) {
             out.push(String(candidates[0]));
             continue;
           }
           // Fallback: search any key containing "flight"
-          for (const [k, v] of Object.entries(item)) {
+          for (const [k, v] of Object.entries(obj)) {
             if (/flight/i.test(k) && v) {
               out.push(String(v));
               break;
@@ -85,13 +87,14 @@ export async function GET(req: NextRequest) {
     let flightNos: string[] = [];
     if (Array.isArray(data)) {
       flightNos = extractFromArray(data);
-    } else if (data && Array.isArray((data as any).data)) {
-      flightNos = extractFromArray((data as any).data);
+    } else if (data && Array.isArray((data as { data?: unknown[] }).data)) {
+      flightNos = extractFromArray((data as { data: unknown[] }).data);
     }
 
     return NextResponse.json({ flightNos });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || "Request failed" }, { status: 500 });
+  } catch (err) {
+    const errorMsg = err instanceof Error ? err.message : "Request failed";
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }
 

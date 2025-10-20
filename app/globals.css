@@ -227,3 +227,11 @@ body {
 .plane-bounce {
   animation: plane-bounce-keyframes 1.2s ease-in-out infinite;
 }
+
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}

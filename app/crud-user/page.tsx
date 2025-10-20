@@ -884,13 +884,13 @@ const Home = () => {
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    ID
-                  </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Station
+                    NO
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                     Full Name
+                  </th>
+                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                    Station
                   </th>
                   <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
                     Username
@@ -911,19 +911,19 @@ const Home = () => {
               </thead>
               <tbody>
                 {paginatedUsers.length > 0 ? (
-                  paginatedUsers.map((user) => (
+                  paginatedUsers.map((user, idx) => (
                     <tr
                       key={user.id_usr}
                       className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200"
                     >
-                      <td className="py-4 px-4 text-gray-400">{user.id_usr}</td>
-                      <td className="py-4 px-4 text-gray-400">
-                        {stations.find((station) => station.id_sts === user.id_sts)?.code_station || user.id_sts}
-                      </td>
+                      <td className="py-4 px-4 text-gray-400">{(currentPage - 1) * ITEM_PER_PAGE + idx + 1}</td>
                       <td className="py-4 px-4">
                         <div className="font-bold text-cyan-400">
                           {user.fullname}
                         </div>
+                      </td>
+                      <td className="py-4 px-4 text-white font-medium">
+                        {stations.find((station) => station.id_sts === user.id_sts)?.code_station || user.id_sts}
                       </td>
                       <td className="py-4 px-4">
                         <div className="text-white font-medium">

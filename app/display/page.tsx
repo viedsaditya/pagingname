@@ -82,7 +82,7 @@ function PagingScreenContent() {
   useEffect(() => {
     setIsClient(true);
     updateTimeAndDate();
-    
+
     // Update time every second
     const interval = setInterval(updateTimeAndDate, 1000);
     return () => clearInterval(interval);
@@ -131,39 +131,55 @@ function PagingScreenContent() {
   }, []);
 
   // Header titles that will animate/change
-  const headerTexts = useMemo(() => [
-    {
-      id: 1,
-      title: "ATTENTION",
-      description: (
-        <>
-          <span className="whitespace-nowrap flex justify-center items-center">The Following Passenger(s) of &thinsp;<strong>{sqCode}</strong>&thinsp; / {isClient ? currentDate : ""} :</span>
-        </>
-      ),
-      instruction: (
-        <>
-          <span className="whitespace-nowrap flex justify-center items-center">Please Exceed The {handleBy?.toUpperCase() || 'JAS'} Counter</span>
-        </>
-      ),
-    },
-    {
-      id: 2,
-      title: "PERHATIAN",
-      description: (
-        <>
-          <span className="whitespace-nowrap flex justify-center items-center">Penumpang Berikut Dari &thinsp;<strong>{sqCode}</strong>&thinsp; / {isClient ? currentDate : ""} :</span>
-        </>
-      ),
-      instruction: (
-        <>
-          <span className="whitespace-nowrap flex justify-center items-center">Silahkan Mendatangani {handleBy?.toUpperCase() || 'JAS'} Konter</span>
-        </>
-      ),
-    },
-  ], [sqCode, isClient, currentDate, handleBy]);
+  const headerTexts = useMemo(
+    () => [
+      {
+        id: 1,
+        title: "ATTENTION",
+        description: (
+          <>
+            <span className="whitespace-nowrap flex justify-center items-center">
+              The Following Passenger(s) of &thinsp;<strong>{sqCode}</strong>
+              &thinsp; / {isClient ? currentDate : ""} :
+            </span>
+          </>
+        ),
+        instruction: (
+          <>
+            <span className="whitespace-nowrap flex justify-center items-center">
+              Please Exceed The {handleBy?.toUpperCase() || "JAS"} Counter
+            </span>
+          </>
+        ),
+      },
+      {
+        id: 2,
+        title: "PERHATIAN",
+        description: (
+          <>
+            <span className="whitespace-nowrap flex justify-center items-center">
+              Penumpang Berikut Dari &thinsp;<strong>{sqCode}</strong>&thinsp; /{" "}
+              {isClient ? currentDate : ""} :
+            </span>
+          </>
+        ),
+        instruction: (
+          <>
+            <span className="whitespace-nowrap flex justify-center items-center">
+              Silahkan Mendatangani {handleBy?.toUpperCase() || "JAS"} Konter
+            </span>
+          </>
+        ),
+      },
+    ],
+    [sqCode, isClient, currentDate, handleBy]
+  );
 
   return (
-    <div className="relative h-screen w-screen flex flex-col overflow-hidden" suppressHydrationWarning>
+    <div
+      className="relative h-screen w-screen flex flex-col overflow-hidden"
+      suppressHydrationWarning
+    >
       {/* Premium Background */}
       <div className="fixed inset-0 -z-10">
         {/* Base gradient */}
@@ -210,17 +226,25 @@ function PagingScreenContent() {
 
           {/* Current Time and Date - Always centered */}
           <div className="flex justify-center items-center text-white">
-            <ClientOnly fallback={
+            <ClientOnly
+              fallback={
+                <div className="text-center">
+                  <div className="text-5xl font-semibold">00:00</div>
+                  <div className="text-2xl text-cyan-400">Loading... | CGK</div>
+                </div>
+              }
+            >
               <div className="text-center">
-                <div className="text-5xl font-semibold">00:00</div>
-                <div className="text-2xl text-cyan-400">Loading... | CGK</div>
-              </div>
-            }>
-              <div className="text-center">
-                <div className="text-5xl font-semibold" suppressHydrationWarning>
+                <div
+                  className="text-5xl font-semibold"
+                  suppressHydrationWarning
+                >
                   {currentTime}
                 </div>
-                <div className="text-2xl text-cyan-400" suppressHydrationWarning>
+                <div
+                  className="text-2xl text-cyan-400"
+                  suppressHydrationWarning
+                >
                   {currentDate} | CGK
                 </div>
               </div>
@@ -229,31 +253,31 @@ function PagingScreenContent() {
 
           {/* Airline Logo or Icon - Fixed width column */}
           {handleBy?.toLowerCase() !== "gapura" && (
-          <div className="sqCode flex items-center justify-end">
-            <div className="bg-white/50 p-6 rounded-xl w-64 h-32 flex items-center justify-center">
-              {beltNo && sqCode ? (
-                <Image
-                  src={`/airlines/${sqCode?.substring(0, 2) || ""}.png`}
-                  alt={`${sqCode?.substring(0, 2) || ""} Logo`}
-                  width={300}
-                  height={150}
-                  className="max-h-24 max-w-52 object-contain"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "/airlines/EY.png";
-                  }}
-                />
-              ) : (
-                <Image
-                  src="/psw.png"
-                  alt="Arrival Icon"
-                  width={450}
-                  height={225}
-                  className="max-h-40 max-w-xl object-contain"
-                />
-              )}
+            <div className="sqCode flex items-center justify-end">
+              <div className="bg-white/50 p-6 rounded-xl w-64 h-32 flex items-center justify-center">
+                {beltNo && sqCode ? (
+                  <Image
+                    src={`/airlines/${sqCode?.substring(0, 2) || ""}.png`}
+                    alt={`${sqCode?.substring(0, 2) || ""} Logo`}
+                    width={300}
+                    height={150}
+                    className="max-h-24 max-w-52 object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/airlines/EY.png";
+                    }}
+                  />
+                ) : (
+                  <Image
+                    src="/psw.png"
+                    alt="Arrival Icon"
+                    width={450}
+                    height={225}
+                    className="max-h-40 max-w-xl object-contain"
+                  />
+                )}
+              </div>
             </div>
-          </div>
           )}
         </div>
       </div>
@@ -275,7 +299,10 @@ function PagingScreenContent() {
                   <h1 className="text-5xl md:text-7xl font-extrabold text-cyan-300 drop-shadow-lg">
                     {headerTexts[index].title}
                   </h1>
-                  <p className="text-3xl md:text-5xl text-gray-100 mb-1 mt-2" suppressHydrationWarning>
+                  <p
+                    className="text-3xl md:text-5xl text-gray-100 mb-1 mt-2"
+                    suppressHydrationWarning
+                  >
                     {headerTexts[index].description}
                   </p>
                 </motion.div>
@@ -296,25 +323,25 @@ function PagingScreenContent() {
           >
             {/* Dynamic passenger names grid - responsive layout that centers based on number of names */}
             {names.length > 0 ? (
-              <div 
+              <div
                 className={`grid gap-x-8 gap-y-6 px-6 place-items-center ${
-                  names.length === 1 
-                    ? 'grid-cols-1' 
-                    : names.length === 2 
-                    ? 'grid-cols-2' 
-                    : names.length === 3 
-                    ? 'grid-cols-3' 
+                  names.length === 1
+                    ? "grid-cols-1"
+                    : names.length === 2
+                    ? "grid-cols-2"
+                    : names.length === 3
+                    ? "grid-cols-3"
                     : names.length <= 4
-                    ? 'grid-cols-2'
+                    ? "grid-cols-2"
                     : names.length <= 6
-                    ? 'grid-cols-3'
+                    ? "grid-cols-3"
                     : names.length <= 8
-                    ? 'grid-cols-4'
-                    : 'grid-cols-4'
+                    ? "grid-cols-4"
+                    : "grid-cols-4"
                 }`}
                 style={{
-                  justifyContent: 'center',
-                  alignItems: 'center'
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 {names.map((name, idx) => (
@@ -324,13 +351,13 @@ function PagingScreenContent() {
                   >
                     <p
                       className={`font-bold text-white text-center break-words hyphens-auto ${
-                        names.length === 1 
-                          ? 'text-5xl md:text-6xl' 
-                          : names.length === 2 
-                          ? 'text-5xl md:text-7xl' 
-                          : names.length === 3 
-                          ? 'text-4xl md:text-6xl' 
-                          : 'text-3xl md:text-5xl'
+                        names.length === 1
+                          ? "text-5xl md:text-6xl"
+                          : names.length === 2
+                          ? "text-5xl md:text-7xl"
+                          : names.length === 3
+                          ? "text-4xl md:text-6xl"
+                          : "text-3xl md:text-5xl"
                       }`}
                       style={{
                         maxWidth: "100%",
@@ -349,7 +376,7 @@ function PagingScreenContent() {
             ) : (
               <div className="flex flex-col items-center justify-center flex-1 text-white text-center min-h-[400px] my-auto mt-30">
                 {freeText ? (
-                  <TextType 
+                  <TextType
                     text={freeText}
                     typingSpeed={120}
                     pauseDuration={3000}
@@ -357,13 +384,14 @@ function PagingScreenContent() {
                     showCursor={true}
                     cursorCharacter="|"
                     loop={true}
+                    noDelete={true}
                     className="text-6xl font-bold text-white whitespace-pre-line"
                   />
                 ) : (
-                  <TextType 
+                  <TextType
                     text={[
                       "PLEASE BE CAREFUL WHILE COLLECTING THE BAG AND DO NOT TAKE THE WRONG BAGGAGE",
-                      "OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR CONVEYOR BELT NO.6"
+                      "OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR CONVEYOR BELT NO.6",
                     ]}
                     typingSpeed={100}
                     pauseDuration={3000}
@@ -371,6 +399,7 @@ function PagingScreenContent() {
                     showCursor={true}
                     cursorCharacter="|"
                     loop={true}
+                    noDelete={true}
                     className="text-6xl font-bold"
                   />
                 )}
@@ -409,32 +438,29 @@ function PagingScreenContent() {
 
       {/* Clean and Minimal Running Text Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 border-t border-gray-700 py-6 overflow-hidden">
-        <div className="animate-marquee flex items-center">
-         <marquee scrollamount="12" scrolldelay="20" direction="left">
-          {/* English Message */}
-          <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
-            PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
-            {beltNo
-              ? `IN FRONT OF BELT 1`
-              : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
-            OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
-          </span>
-
-          {/* Separator */}
-          <span className="text-cyan-400 text-4xl mr-16">|</span>
-
-          {/* Indonesian Message */}
-          <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
-            HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
-            {beltNo
-              ? `DI DEPAN BELT 1`
-              : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
-            ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
-          </span>
-
-          {/* Separator */}
-          <span className="text-cyan-400 text-4xl mr-16">|</span>
-        </marquee>
+        <div className="relative w-full h-12 flex items-center overflow-hidden">
+          <div className="whitespace-nowrap flex items-center animate-marquee">
+            {/* English Message */}
+            <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
+              PLEASE REPORT TO PT JAS BAGGAGE SERVICES COUNTER{" "}
+              {beltNo
+                ? `IN FRONT OF BELT 1`
+                : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
+              OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
+            </span>
+            {/* Separator */}
+            <span className="text-cyan-400 text-4xl mr-16">|</span>
+            {/* Indonesian Message */}
+            <span className="text-3xl md:text-4xl text-cyan-300 font-bold whitespace-nowrap mr-16">
+              HARAP MELAPOR KE KONTER LAYANAN BAGASI PT JAS{" "}
+              {beltNo
+                ? `DI DEPAN BELT 1`
+                : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
+              ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
+            </span>
+            {/* Separator */}
+            <span className="text-cyan-400 text-4xl mr-16">|</span>
+          </div>
         </div>
       </div>
     </div>
@@ -443,7 +469,13 @@ function PagingScreenContent() {
 
 export default function PagingScreen() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 flex items-center justify-center text-white">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 flex items-center justify-center text-white">
+          Loading...
+        </div>
+      }
+    >
       <PagingScreenContent />
     </Suspense>
   );
