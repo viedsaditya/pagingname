@@ -20,9 +20,7 @@ function PagingScreenContent() {
   const [currentTime, setCurrentTime] = useState("00:00");
   const [currentDate, setCurrentDate] = useState("Loading...");
   const [isClient, setIsClient] = useState(false);
-
-  // Index for which language to show
-  const [index, setIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   // Define types for API response
   interface PagingItem {
@@ -123,44 +121,27 @@ function PagingScreenContent() {
     };
   }, [beltNo, fetchData]);
 
-  // Language switch animation
+  // Auto-change untuk passenger names (maksimal 4 per halaman)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % 2);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
+    if (names.length <= 4) {
+      setCurrentPage(0);
+      return;
+    }
 
-  // Header titles that will animate/change
-  const headerTexts = useMemo(
-    () => [
-      {
-        id: 1,
-        title: "ATTENTION",
-        description: (
-          <>
-            <span className="whitespace-nowrap flex justify-center items-center">
-              The Following Passenger(s) of &thinsp;<strong>{sqCode}</strong>
-              &thinsp; / {isClient ? currentDate : ""} :
-            </span>
-          </>
-        ),
-      },
-      {
-        id: 2,
-        title: "PERHATIAN",
-        description: (
-          <>
-            <span className="whitespace-nowrap flex justify-center items-center">
-              Penumpang Berikut Dari &thinsp;<strong>{sqCode}</strong>&thinsp; /{" "}
-              {isClient ? currentDate : ""} :
-            </span>
-          </>
-        ),
-      },
-    ],
-    [sqCode, isClient, currentDate]
-  );
+    const totalPages = Math.ceil(names.length / 4);
+    const intervalId = setInterval(() => {
+      setCurrentPage((prev) => (prev + 1) % totalPages);
+    }, 5000); // ganti halaman setiap 5 detik
+
+    return () => clearInterval(intervalId);
+  }, [names.length]);
+
+  // Get current page passengers
+  const getCurrentPagePassengers = () => {
+    if (names.length <= 4) return names;
+    const startIndex = currentPage * 4;
+    return names.slice(startIndex, startIndex + 4);
+  };
 
   return (
     <div
@@ -225,139 +206,95 @@ function PagingScreenContent() {
         {/* Divider Line */}
         <div className="w-full border-t-2 border-white/30 -mt-2"></div>
 
-        {/* Enhanced Content Area */}
-        <div className="relative z-10 flex flex-col items-center justify-center flex-1 w-full px-8 py-8 mb-20">
-          {/* Header Section */}
-          <div className="w-full max-w-5xl text-center mb-8">
-            <ClientOnly>
-              <AnimatePresence mode="wait">
-                {beltNo && sqCode ? (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-lg">
-                      {headerTexts[index].title}
-                    </h1>
-                    <p
-                      className="text-3xl md:text-5xl text-white mb-1 mt-2"
-                      suppressHydrationWarning
+        {/* Flight Information Section */}
+        <div className="flex-1 flex items-start justify-center px-4 pt-8">
+          <div className="w-full">
+            {/* Flight Data Table - No Card */}
+            {names.length > 0 ? (
+              <div className="w-full">
+                {/* Table Header */}
+                <div className="flex items-center py-8 mb-2 px-12">
+                  <div className="w-48 flex items-center justify-start">
+                    <div className="text-6xl font-bold text-white">AIRLINE</div>
+                  </div>
+                  <div className="text-6xl font-bold text-white flex-1 text-center">
+                    FLIGHT
+                  </div>
+                  <div className="text-6xl font-bold text-white flex-1 text-center">
+                    PASSENGER
+                  </div>
+                </div>
+
+                {/* Table Data with Fade Animation */}
+                <div className="space-y-6">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentPage}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
                     >
-                      {headerTexts[index].description}
-                    </p>
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
-            </ClientOnly>
-          </div>
-
-          {/* Content Area - Perfectly centered in remaining space */}
-          <div className="flex-1 flex items-center justify-center w-full">
-            {/* Content Section - Centered in available space */}
-            <div className="relative w-full max-w-7xl flex justify-center">
-              {/* Subtle content frame */}
-              <div className="absolute -inset-1 bg-gradient-to-br from-white/10 via-blue-300/5 to-white/10 rounded-xl blur-md"></div>
-
-              {/* Main content container - Always present with fixed background and perfect centering */}
-              <div
-                className="relative p-10 rounded-xl bg-black/10 backdrop-blur-sm border border-white/20 w-full mx-auto flex items-center justify-center"
-                style={{ minHeight: "450px" }}
-              >
-                {/* Dynamic passenger names grid - responsive layout that centers based on number of names */}
-                {names.length > 0 ? (
-                  <div
-                    className={`grid gap-x-8 gap-y-6 px-6 place-items-center w-full ${
-                      names.length === 1
-                        ? "grid-cols-1"
-                        : names.length === 2
-                        ? "grid-cols-2"
-                        : names.length === 3
-                        ? "grid-cols-3"
-                        : names.length <= 4
-                        ? "grid-cols-2"
-                        : names.length <= 6
-                        ? "grid-cols-3"
-                        : names.length <= 8
-                        ? "grid-cols-4"
-                        : "grid-cols-4"
-                    }`}
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {names.map((name, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-center w-full"
-                      >
-                        <p
-                          className={`font-bold text-white text-center break-words hyphens-auto ${
-                            names.length === 1
-                              ? "text-5xl md:text-6xl"
-                              : names.length === 2
-                              ? "text-5xl md:text-7xl"
-                              : names.length === 3
-                              ? "text-4xl md:text-6xl"
-                              : "text-3xl md:text-5xl"
-                          }`}
-                          style={{
-                            maxWidth: "100%",
-                            lineHeight: "1.1",
-                            display: "-webkit-box",
-                            WebkitLineClamp: "2",
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                          }}
+                      {getCurrentPagePassengers().map((name, idx) => (
+                        <div
+                          key={`${currentPage}-${idx}`}
+                          className="flex items-center py-6 px-12"
                         >
-                          {name}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full text-white text-center">
-                    {freeText ? (
-                      <TextType
-                        text={freeText}
-                        typingSpeed={120}
-                        pauseDuration={3000}
-                        deletingSpeed={60}
-                        showCursor={true}
-                        cursorCharacter="|"
-                        loop={true}
-                        noDelete={true}
-                        className="text-6xl font-bold text-white whitespace-pre-line"
-                      />
-                    ) : (
-                      <TextType
-                        text={[
-                          "PLEASE BE CAREFUL WHILE COLLECTING THE BAG AND DO NOT TAKE THE WRONG BAGGAGE",
-                          "OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR CONVEYOR BELT NO.6",
-                        ]}
-                        typingSpeed={100}
-                        pauseDuration={3000}
-                        deletingSpeed={50}
-                        showCursor={true}
-                        cursorCharacter="|"
-                        loop={true}
-                        noDelete={true}
-                        className="text-6xl font-bold"
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
+                          {/* Airline Logo */}
+                          <div className="w-48 flex items-center justify-start">
+                            <Image
+                              src={`/airline/${sqCode.substring(0, 2)}.png`}
+                              alt={`${sqCode.substring(0, 2)} Logo`}
+                              width={180}
+                              height={90}
+                              className="object-contain"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = "none";
+                              }}
+                            />
+                          </div>
 
-              {/* Decorative corner elements */}
-              <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-white/30 rounded-tl-xl"></div>
-              <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-white/30 rounded-tr-xl"></div>
-              <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-white/30 rounded-bl-xl"></div>
-              <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-white/30 rounded-br-xl"></div>
-            </div>
+                          {/* Flight Number */}
+                          <div className="text-6xl font-bold text-white flex-1 text-center">
+                            {sqCode}
+                          </div>
+
+                          {/* Passenger Name */}
+                          <div className="text-6xl font-medium text-white flex-1 text-center">
+                            {name}
+                          </div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            ) : freeText ? (
+              <div className="absolute inset-0 flex items-center justify-center pt-28">
+                <div className="text-center">
+                  <TextType
+                    text={freeText}
+                    typingSpeed={100}
+                    pauseDuration={2000}
+                    deletingSpeed={50}
+                    showCursor={true}
+                    cursorCharacter="|"
+                    loop={true}
+                    noDelete={true}
+                    className="text-6xl font-bold text-white"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center pt-28">
+                <div className="text-center">
+                  <div className="text-6xl font-bold text-white">
+                    NO FLIGHT INFORMATION
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

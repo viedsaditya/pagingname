@@ -81,16 +81,21 @@ export async function GET(request: Request) {
         //lakukan validasi api key
         validateApiKey(request);
 
+        console.log("Fetching pagings from database...");
         const pagings = await prisma.tb_paging.findMany({
             orderBy: {
                 id: "asc",
             },
         });
+        console.log(`Found ${pagings.length} paging records`);
         return NextResponse.json(pagings, {status: 200});
     } catch (error: unknown) {
         //jika terjadi error maka tampilkan error
         const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
-        return NextResponse.json({message: errorMessage, status: 400});
+        const errorStack = error instanceof Error ? error.stack : "";
+        console.error("GET /api/paging error:", errorMessage);
+        console.error("Error stack:", errorStack);
+        return NextResponse.json({message: errorMessage}, {status: 500});
     }
 }
 

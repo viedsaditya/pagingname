@@ -181,7 +181,7 @@ const Home = () => {
       router.push("/login");
       return;
     }
-    
+
     //jika user masih authenticated maka tampilkan data
     fetchPagings();
   }, [router]);
@@ -376,108 +376,99 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 text-white p-4 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white p-4 md:p-6 lg:p-8 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 -right-40 w-80 h-80 bg-slate-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
       {isLoggingOut && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm">
-          <div className="text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/20 border border-blue-400/30">
-              <span className="text-2xl font-bold text-blue-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/90 backdrop-blur-md">
+          <div className="text-center animate-fade-in">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-cyan-500/30 border-2 border-blue-400/50 shadow-xl">
+              <span className="text-3xl font-bold text-blue-200">
                 {countdown}
               </span>
             </div>
-            <p className="text-white text-lg font-semibold">Logout Successful</p>
-            <p className="text-white/70 text-sm mt-1">
+            <p className="text-white text-xl font-semibold mb-2">
+              Logout Successful
+            </p>
+            <p className="text-white/60 text-sm">
               Redirecting to login page...
             </p>
           </div>
         </div>
       )}
 
-      <div className="container mx-auto relative z-10">
+      <div className="container mx-auto max-w-7xl relative z-10">
         {/* Modern Header */}
-        <div className="flex-1 bg-slate-800/20 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-6">
+        <div className="bg-slate-800/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl p-6 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-slate-700/40 border border-white/10 overflow-hidden">
+              <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-slate-700/60 to-slate-800/60 border border-white/20 overflow-hidden shadow-lg">
                 <Image
                   src="/logojasaja.png"
                   alt="JAS"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 object-contain"
+                  width={48}
+                  height={48}
+                  className="w-11 h-11 object-contain"
                 />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white">
+                <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                   JAS Paging Management
                 </h1>
+                <p className="text-sm text-slate-400 mt-0.5">Manage your paging entries</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => handleLogout()}
-                className="inline-flex items-center px-4 py-2 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-colors duration-200 text-sm font-medium"
+            <button
+              onClick={() => handleLogout()}
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-500/20 to-red-600/20 text-red-300 border border-red-500/30 hover:from-red-500/30 hover:to-red-600/30 hover:border-red-400/50 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-red-500/20"
+            >
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-                Logout
-              </button>
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              Logout
+            </button>
           </div>
         </div>
 
         {/* Error Notification */}
         {apiError && (
           <div
-            className="bg-gradient-to-r from-red-500/20 via-red-600/20 to-red-500/20 backdrop-blur-xl border border-red-400/30 text-white rounded-2xl px-6 py-4 mb-6 relative shadow-2xl animate-pulse"
+            className="bg-gradient-to-r from-red-500/15 to-red-600/15 backdrop-blur-md border border-red-400/40 text-white rounded-xl px-5 py-4 mb-6 shadow-lg"
             role="alert"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">✕</span>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 flex-1">
+                <div className="w-5 h-5 mt-0.5 bg-red-500/80 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
                 </div>
-                <div>
-                  <strong className="font-bold text-red-200">Error:</strong>
-                  <span className="block sm:inline ml-2 text-gray-100">
-                    {apiError}
-                  </span>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-200">{apiError}</p>
                 </div>
               </div>
               <button
-                className="text-red-300 hover:text-red-100 transition-colors p-1"
+                className="text-red-300 hover:text-red-100 transition-colors flex-shrink-0"
                 onClick={() => setApiError("")}
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
@@ -487,39 +478,26 @@ const Home = () => {
         {/* Success Notification */}
         {successMessage && (
           <div
-            className="bg-gradient-to-r from-emerald-500/20 via-green-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-400/30 text-white rounded-2xl px-6 py-4 mb-6 relative shadow-2xl animate-bounce"
+            className="bg-gradient-to-r from-emerald-500/15 to-green-500/15 backdrop-blur-md border border-emerald-400/40 text-white rounded-xl px-5 py-4 mb-6 shadow-lg"
             role="alert"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">✓</span>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3 flex-1">
+                <div className="w-5 h-5 mt-0.5 bg-emerald-500/80 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 </div>
-                <div>
-                  <strong className="font-bold text-emerald-200">
-                    Success:
-                  </strong>
-                  <span className="block sm:inline ml-2 text-gray-100">
-                    {successMessage}
-                  </span>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-emerald-200">{successMessage}</p>
                 </div>
               </div>
               <button
-                className="text-emerald-300 hover:text-emerald-100 transition-colors p-1"
+                className="text-emerald-300 hover:text-emerald-100 transition-colors flex-shrink-0"
                 onClick={() => setSuccessMessage("")}
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
@@ -541,42 +519,51 @@ const Home = () => {
         </div> */}
 
         {/* Add Paging Form */}
-        <div className="flex-1 bg-slate-800/20 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-6">
-          <div className="flex items-center gap-2 mb-6">
-            <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-700/40 border border-white/10">
-              ✏️
-            </span>
-            <h3 className="text-xl font-bold text-white">
-              {form.id ? "Edit Paging Entry" : "Add New Paging Entry"}
-            </h3>
+        <div className="bg-slate-800/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl p-6 mb-6">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30">
+              <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white">
+                {form.id ? "Edit Paging Entry" : "Add New Paging Entry"}
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                {form.id ? "Update the details below" : "Fill in the details below"}
+              </p>
+            </div>
           </div>
 
           <form
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-5"
             onSubmit={(e) => {
               e.preventDefault();
               handleSubmit();
             }}
           >
             {/* First Row: Belt No, Flight No, Handle By */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {/* Belt No */}
               <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Belt No
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  Belt No <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter Belt No"
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                  placeholder="e.g., 01"
+                  className="px-4 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
                   value={form.belt_no}
                   onChange={(e) =>
                     setForm({ ...form, belt_no: e.target.value })
                   }
                 />
                 {error.belt_no && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
+                  <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     <span>{error.belt_no}</span>
                   </p>
                 )}
@@ -604,26 +591,31 @@ const Home = () => {
                 )}
               </div> */}
               <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Flight No
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  Flight No <span className="text-red-400">*</span>
                 </label>
                 <input
                   list="flightno-options"
                   type="text"
-                  placeholder="Search or select Flight No"
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
+                  placeholder="e.g., SQ123"
+                  className="px-4 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
                   value={form.flight_no}
                   onFocus={async () => {
                     try {
                       const today = new Date();
                       const yyyy = today.getFullYear();
-                      const mm = String(today.getMonth() + 1).padStart(2, '0');
-                      const dd = String(today.getDate()).padStart(2, '0');
+                      const mm = String(today.getMonth() + 1).padStart(2, "0");
+                      const dd = String(today.getDate()).padStart(2, "0");
                       const date = `${yyyy}-${mm}-${dd}`;
-                      const resp = await fetch(`/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`, { cache: 'no-store' });
+                      const resp = await fetch(
+                        `/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`,
+                        { cache: "no-store" }
+                      );
                       if (resp.ok) {
                         const json = await resp.json();
-                        const list: string[] = Array.isArray(json?.flightNos) ? json.flightNos : [];
+                        const list: string[] = Array.isArray(json?.flightNos)
+                          ? json.flightNos
+                          : [];
                         setFlightNoOptions(list);
                       }
                     } catch {}
@@ -632,21 +624,23 @@ const Home = () => {
                     const value = e.target.value;
                     setForm({ ...form, flight_no: value });
                     try {
-                      // Fetch suggestions for today's date by default
                       const today = new Date();
                       const yyyy = today.getFullYear();
-                      const mm = String(today.getMonth() + 1).padStart(2, '0');
-                      const dd = String(today.getDate()).padStart(2, '0');
+                      const mm = String(today.getMonth() + 1).padStart(2, "0");
+                      const dd = String(today.getDate()).padStart(2, "0");
                       const date = `${yyyy}-${mm}-${dd}`;
-                      const resp = await fetch(`/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`, { cache: 'no-store' });
+                      const resp = await fetch(
+                        `/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`,
+                        { cache: "no-store" }
+                      );
                       if (resp.ok) {
                         const json = await resp.json();
-                        const list: string[] = Array.isArray(json?.flightNos) ? json.flightNos : [];
+                        const list: string[] = Array.isArray(json?.flightNos)
+                          ? json.flightNos
+                          : [];
                         setFlightNoOptions(list);
                       }
-                    } catch {
-                      // ignore suggestions errors
-                    }
+                    } catch {}
                   }}
                 />
                 <datalist id="flightno-options">
@@ -655,8 +649,10 @@ const Home = () => {
                   ))}
                 </datalist>
                 {error.flight_no && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
+                  <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     <span>{error.flight_no}</span>
                   </p>
                 )}
@@ -664,18 +660,18 @@ const Home = () => {
 
               {/* Handle By */}
               <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Handle By
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  Handle By <span className="text-red-400">*</span>
                 </label>
                 <select
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200 appearance-none"
+                  className="px-4 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200 appearance-none cursor-pointer"
                   value={form.handle_by}
                   onChange={(e) =>
                     setForm({ ...form, handle_by: e.target.value })
                   }
-                  style={{ color: form.handle_by ? "white" : "#9CA3AF" }}
+                  style={{ color: form.handle_by ? "white" : "#64748b" }}
                 >
-                  <option value="" disabled hidden className="text-gray-400">
+                  <option value="" disabled hidden>
                     Select Handler
                   </option>
                   <option value="Jas" className="text-black bg-white">
@@ -686,8 +682,10 @@ const Home = () => {
                   </option>
                 </select>
                 {error.handle_by && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
+                  <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     <span>{error.handle_by}</span>
                   </p>
                 )}
@@ -695,24 +693,26 @@ const Home = () => {
             </div>
 
             {/* Second Row: Passenger Name and Default Text */}
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               {/* Passenger Name */}
               <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Passenger Name
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  Passenger Name <span className="text-red-400">*</span>
                 </label>
                 <textarea
-                  placeholder="Enter Passenger Name"
+                  placeholder="Enter passenger name(s)"
                   rows={4}
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200 resize-vertical"
+                  className="px-4 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200 resize-none"
                   value={form.name_passenger}
                   onChange={(e) =>
                     setForm({ ...form, name_passenger: e.target.value })
                   }
                 />
                 {error.name_passenger && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
+                  <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     <span>{error.name_passenger}</span>
                   </p>
                 )}
@@ -720,21 +720,23 @@ const Home = () => {
 
               {/* Default Text */}
               <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Default Text
+                <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  Default Text <span className="text-red-400">*</span>
                 </label>
                 <textarea
-                  placeholder="Enter Default Text"
+                  placeholder="Enter paging message"
                   rows={4}
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200 resize-vertical"
+                  className="px-4 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200 resize-none"
                   value={form.free_text}
                   onChange={(e) =>
                     setForm({ ...form, free_text: e.target.value })
                   }
                 />
                 {error.free_text && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
+                  <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
                     <span>{error.free_text}</span>
                   </p>
                 )}
@@ -742,7 +744,7 @@ const Home = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
+            <div className="flex justify-end gap-3 mt-2 pt-5 border-t border-white/10">
               {/* {form.id && (
                 <button
                   type="button"
@@ -772,8 +774,15 @@ const Home = () => {
               )} */}
               <button
                 type="submit"
-                className="inline-flex items-center px-6 py-3 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors duration-200 text-sm font-medium"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border border-cyan-500/40 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-400/60 transition-all duration-200 text-sm font-semibold shadow-lg hover:shadow-cyan-500/20"
               >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {form.id ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  )}
+                </svg>
                 {form.id ? "Update Paging" : "Add Paging"}
               </button>
             </div>
@@ -781,42 +790,49 @@ const Home = () => {
         </div>
 
         {/* Paging Data Table */}
-        <div className="flex-1 bg-slate-800/20 backdrop-blur-sm rounded-2xl border border-white/10 p-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-700/40 border border-white/10">
-                📋
-              </span>
-              Paging Management
-            </h3>
+        <div className="bg-slate-800/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl p-6">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
+            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30">
+              <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white">
+                Paging Entries
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Showing {pagings.length} total entries
+              </p>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="overflow-x-auto -mx-6 px-6">
+            <table className="w-full min-w-max">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    NO
+                <tr>
+                  <th className="text-left py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    No
                   </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Belt No
+                  <th className="text-left py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Belt
                   </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Flight No
+                  <th className="text-left py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Flight
                   </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                  <th className="text-left py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
                     Passenger
                   </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Handle By
+                  <th className="text-left py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Handler
                   </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
-                    Default Text
+                  <th className="text-left py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Message
                   </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                  <th className="text-left py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="text-left py-4 px-4 text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                  <th className="text-center py-4 px-3 text-xs font-bold text-slate-300 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -826,88 +842,89 @@ const Home = () => {
                   paginatedPagings.map((pag, idx) => (
                     <tr
                       key={pag.id}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200"
+                      className="hover:bg-slate-700/20 transition-colors duration-150"
                     >
-                      <td className="py-4 px-4 text-gray-400">{(currentPage - 1) * ITEM_PER_PAGE + idx + 1}</td>
-                      <td className="py-4 px-4">
-                        <div className="font-bold text-cyan-400">{pag.belt_no}</div>
+                      <td className="py-4 px-3 text-slate-400 text-sm">
+                        {(currentPage - 1) * ITEM_PER_PAGE + idx + 1}
                       </td>
-                      <td className="py-4 px-4">
-                        <div className="text-white font-medium">
+                      <td className="py-4 px-3">
+                        <div className="font-semibold text-cyan-300 text-sm">
+                          {pag.belt_no}
+                        </div>
+                      </td>
+                      <td className="py-4 px-3">
+                        <div className="text-white font-medium text-sm">
                           {pag.flight_no}
                         </div>
                       </td>
-                      <td className="py-4 px-4">
-                        <div className="text-white font-medium">
+                      <td className="py-4 px-3">
+                        <div
+                          className="text-slate-200 text-sm max-w-[200px] truncate"
+                          title={pag.name_passenger}
+                        >
                           {pag.name_passenger}
                         </div>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="py-4 px-3">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold border ${
+                          className={`inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-semibold border ${
                             pag.handle_by === "Jas"
-                              ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                              : "bg-purple-500/20 text-purple-400 border-purple-500/30"
+                              ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                              : "bg-purple-500/15 text-purple-300 border-purple-500/30"
                           }`}
                         >
                           {pag.handle_by}
                         </span>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="py-4 px-3">
                         <div
-                          className="text-gray-300 text-sm max-w-xs truncate"
+                          className="text-slate-300 text-sm max-w-[200px] truncate"
                           title={pag.free_text}
                         >
                           {pag.free_text}
                         </div>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="py-4 px-3">
                         <span
-                          className={`inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold border whitespace-nowrap ${
+                          className={`inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-semibold border whitespace-nowrap ${
                             pag.status === 1
-                              ? "bg-green-500/20 text-green-400 border-green-500/30"
-                              : "bg-red-500/20 text-red-400 border-red-500/30"
+                              ? "bg-green-500/15 text-green-300 border-green-500/30"
+                              : "bg-red-500/15 text-red-300 border-red-500/30"
                           }`}
                         >
                           {pag.status === 1 ? "SHOW" : "NO SHOW"}
                         </span>
                       </td>
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-2">
+                      <td className="py-4 px-3">
+                        <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => handleEdit(pag)}
-                            className="inline-flex items-center px-3 py-1 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 transition-colors duration-200 text-xs font-medium"
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 hover:bg-blue-500/25 hover:border-blue-400/50 transition-all duration-150"
                             title="Edit"
                           >
-                            <FontAwesomeIcon icon={faEdit} className="mr-1" />
-                            Edit
+                            <FontAwesomeIcon icon={faEdit} className="w-3 h-3" />
                           </button>
-                          <button
-                            onClick={() => handleDelete(pag.id)}
-                            className="inline-flex items-center px-3 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-colors duration-200 text-xs font-medium"
-                            title="Delete"
-                          >
-                            <FontAwesomeIcon icon={faTrash} className="mr-1" />
-                            Delete
-                          </button>
+
                           <button
                             onClick={() => handleShow(pag.id)}
-                            className="inline-flex items-center px-3 py-1 rounded-lg bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 transition-colors duration-200 text-xs font-medium"
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-green-500/15 text-green-400 border border-green-500/30 hover:bg-green-500/25 hover:border-green-400/50 transition-all duration-150"
                             title="Show"
                           >
-                            <FontAwesomeIcon icon={faEye} className="mr-1" />
-                            Show
+                            <FontAwesomeIcon icon={faEye} className="w-3 h-3" />
                           </button>
                           <button
                             onClick={() => handleNoShow(pag.id)}
-                            className="inline-flex items-center px-3 py-1 rounded-lg bg-gray-500/20 text-gray-400 border border-gray-500/30 hover:bg-gray-500/30 transition-colors duration-200 text-xs font-medium"
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-500/15 text-slate-400 border border-slate-500/30 hover:bg-slate-500/25 hover:border-slate-400/50 transition-all duration-150"
                             title="No Show"
                           >
-                            <FontAwesomeIcon
-                              icon={faEyeSlash}
-                              className="mr-1"
-                            />
-                            Hide
+                            <FontAwesomeIcon icon={faEyeSlash} className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(pag.id)}
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25 hover:border-red-400/50 transition-all duration-150"
+                            title="Delete"
+                          >
+                            <FontAwesomeIcon icon={faTrash} className="w-3 h-3" />
                           </button>
                         </div>
                       </td>
@@ -915,9 +932,19 @@ const Home = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={8} className="py-8 px-4 text-center">
-                      <div className="text-gray-400">
-                        No paging data available
+                    <td colSpan={8} className="py-12 px-4">
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <div className="w-16 h-16 mb-4 rounded-full bg-slate-700/30 flex items-center justify-center">
+                          <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                          </svg>
+                        </div>
+                        <p className="text-slate-400 text-sm font-medium">
+                          No paging data available
+                        </p>
+                        <p className="text-slate-500 text-xs mt-1">
+                          Add a new entry to get started
+                        </p>
                       </div>
                     </td>
                   </tr>
@@ -927,42 +954,33 @@ const Home = () => {
           </div>
 
           {/* Pagination */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-6 pt-4 border-t border-white/10 gap-4">
-            <div className="text-sm text-gray-400">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-5 pt-5 border-t border-white/10 gap-4">
+            <div className="text-xs text-slate-400 font-medium">
               {pagings.length > 0 ? (
                 <>
-                  Showing {(currentPage - 1) * ITEM_PER_PAGE + 1} to{" "}
-                  {Math.min(currentPage * ITEM_PER_PAGE, pagings.length)} of{" "}
-                  {pagings.length} entries
+                  Showing <span className="text-white">{(currentPage - 1) * ITEM_PER_PAGE + 1}</span> to{" "}
+                  <span className="text-white">{Math.min(currentPage * ITEM_PER_PAGE, pagings.length)}</span> of{" "}
+                  <span className="text-white">{pagings.length}</span> entries
                 </>
               ) : (
-                <>Showing 0 to 0 of 0 entries</>
+                <>No entries to display</>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-md bg-slate-700/30 border border-slate-600/30 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700/50 transition-colors duration-200"
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-700/40 border border-slate-600/40 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-700/60 hover:border-slate-500/50 transition-all duration-150"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
-                  />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
 
               <div className="flex items-center gap-1">
                 {pagings.length === 0 ? (
-                  <button className="w-8 h-8 flex items-center justify-center rounded-md text-sm bg-slate-700/30 text-white font-medium shadow-sm">
+                  <button className="w-8 h-8 flex items-center justify-center rounded-lg text-xs bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-semibold">
                     1
                   </button>
                 ) : (
@@ -984,10 +1002,10 @@ const Home = () => {
                         <button
                           key={pageNumber}
                           onClick={() => handlePageChange(pageNumber)}
-                          className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-colors duration-200 shadow-sm ${
+                          className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-semibold transition-all duration-150 ${
                             currentPage === pageNumber
-                              ? "bg-cyan-700/30 text-white"
-                              : "bg-slate-700/30 border border-slate-600/30 text-gray-300 hover:bg-slate-700/50"
+                              ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-300"
+                              : "bg-slate-700/40 border border-slate-600/40 text-slate-400 hover:bg-slate-700/60 hover:border-slate-500/50 hover:text-slate-300"
                           }`}
                         >
                           {pageNumber}
@@ -1003,19 +1021,10 @@ const Home = () => {
                   handlePageChange(Math.min(totalPages || 1, currentPage + 1))
                 }
                 disabled={currentPage === (totalPages || 1)}
-                className="w-8 h-8 flex items-center justify-center rounded-md bg-slate-700/30 border border-slate-600/30 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700/50 transition-colors duration-200"
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-700/40 border border-slate-600/40 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-700/60 hover:border-slate-500/50 transition-all duration-150"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-                  />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
             </div>
