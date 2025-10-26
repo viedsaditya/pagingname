@@ -17,7 +17,6 @@ function PagingScreenContent() {
   const [names, setNames] = useState<string[]>([]);
   const [freeText, setFreeText] = useState("");
   const [handleBy, setHandleBy] = useState("Jas");
-  const [currentTime, setCurrentTime] = useState("00:00");
   const [currentDate, setCurrentDate] = useState("Loading...");
   const [isClient, setIsClient] = useState(false);
 
@@ -94,12 +93,6 @@ function PagingScreenContent() {
   // Function to update time and date
   const updateTimeAndDate = () => {
     const now = new Date();
-    setCurrentTime(
-      now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    );
     setCurrentDate(
       now.toLocaleDateString("en-ID", {
         day: "numeric",

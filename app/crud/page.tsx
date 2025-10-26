@@ -420,7 +420,9 @@ const Home = () => {
                 <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                   JAS Paging Management
                 </h1>
-                <p className="text-sm text-slate-400 mt-0.5">Manage your paging entries</p>
+                <p className="text-sm text-slate-400 mt-0.5">
+                  Manage your paging entries
+                </p>
               </div>
             </div>
 
@@ -455,8 +457,16 @@ const Home = () => {
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3 flex-1">
                 <div className="w-5 h-5 mt-0.5 bg-red-500/80 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <div className="flex-1">
@@ -467,8 +477,18 @@ const Home = () => {
                 className="text-red-300 hover:text-red-100 transition-colors flex-shrink-0"
                 onClick={() => setApiError("")}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -484,46 +504,62 @@ const Home = () => {
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3 flex-1">
                 <div className="w-5 h-5 mt-0.5 bg-emerald-500/80 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <svg
+                    className="w-3 h-3 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-emerald-200">{successMessage}</p>
+                  <p className="text-sm font-medium text-emerald-200">
+                    {successMessage}
+                  </p>
                 </div>
               </div>
               <button
                 className="text-emerald-300 hover:text-emerald-100 transition-colors flex-shrink-0"
                 onClick={() => setSuccessMessage("")}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
           </div>
         )}
 
-        {/* Example Button to Show How Duplicate Belt Error Looks */}
-        {/* <div className="mb-4">
-          <button
-            type="button"
-            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-            onClick={() => {
-              // This is just a demonstration of how the error would look
-              setApiError("DUPLICATE BELT NUMBER DETECTED! Belt number 5 is already assigned to flight SQ123 with passenger JOHN DOE. Please use a different belt number.");
-            }}
-          >
-            CONTOH: Klik untuk Lihat Pesan Error Belt Double
-          </button>
-        </div> */}
-
         {/* Add Paging Form */}
         <div className="bg-slate-800/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl p-6 mb-6">
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30">
-              <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              <svg
+                className="w-5 h-5 text-cyan-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
               </svg>
             </div>
             <div>
@@ -531,7 +567,9 @@ const Home = () => {
                 {form.id ? "Edit Paging Entry" : "Add New Paging Entry"}
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                {form.id ? "Update the details below" : "Fill in the details below"}
+                {form.id
+                  ? "Update the details below"
+                  : "Fill in the details below"}
               </p>
             </div>
           </div>
@@ -552,7 +590,7 @@ const Home = () => {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g., 01"
+                  placeholder="e.g., 1"
                   className="px-4 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
                   value={form.belt_no}
                   onChange={(e) =>
@@ -561,8 +599,16 @@ const Home = () => {
                 />
                 {error.belt_no && (
                   <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>{error.belt_no}</span>
                   </p>
@@ -570,26 +616,6 @@ const Home = () => {
               </div>
 
               {/* Flight No */}
-              {/* <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-3">
-                  Flight No
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter Flight No"
-                  className="px-4 py-3 bg-slate-700/30 border border-slate-600/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-all duration-200"
-                  value={form.flight_no}
-                  onChange={(e) =>
-                    setForm({ ...form, flight_no: e.target.value })
-                  }
-                />
-                {error.flight_no && (
-                  <p className="text-xs text-red-400 mt-2 flex items-center space-x-1">
-                    <span>⚠️</span>
-                    <span>{error.flight_no}</span>
-                  </p>
-                )}
-              </div> */}
               <div className="flex flex-col">
                 <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
                   Flight No <span className="text-red-400">*</span>
@@ -650,8 +676,16 @@ const Home = () => {
                 </datalist>
                 {error.flight_no && (
                   <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>{error.flight_no}</span>
                   </p>
@@ -683,8 +717,16 @@ const Home = () => {
                 </select>
                 {error.handle_by && (
                   <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>{error.handle_by}</span>
                   </p>
@@ -710,8 +752,16 @@ const Home = () => {
                 />
                 {error.name_passenger && (
                   <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>{error.name_passenger}</span>
                   </p>
@@ -734,8 +784,16 @@ const Home = () => {
                 />
                 {error.free_text && (
                   <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <svg
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span>{error.free_text}</span>
                   </p>
@@ -745,42 +803,30 @@ const Home = () => {
 
             {/* Submit Button */}
             <div className="flex justify-end gap-3 mt-2 pt-5 border-t border-white/10">
-              {/* {form.id && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setForm({
-                      id: 0,
-                      belt_no: "",
-                      flight_no: "",
-                      name_passenger: "",
-                      handle_by: "",
-                      free_text: "",
-                      status: 0,
-                    });
-                    setError({
-                      belt_no: "",
-                      flight_no: "",
-                      name_passenger: "",
-                      handle_by: "",
-                      free_text: "",
-                      status: "",
-                    });
-                  }}
-                  className="inline-flex items-center px-6 py-3 rounded-lg bg-gray-500/20 text-gray-400 border border-gray-500/30 hover:bg-gray-500/30 transition-colors duration-200 text-sm font-medium"
-                >
-                  Cancel
-                </button>
-              )} */}
               <button
                 type="submit"
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 border border-cyan-500/40 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-400/60 transition-all duration-200 text-sm font-semibold shadow-lg hover:shadow-cyan-500/20"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   {form.id ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
                   ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
                   )}
                 </svg>
                 {form.id ? "Update Paging" : "Add Paging"}
@@ -793,14 +839,22 @@ const Home = () => {
         <div className="bg-slate-800/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl p-6">
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30">
-              <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              <svg
+                className="w-5 h-5 text-blue-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white">
-                Paging Entries
-              </h3>
+              <h3 className="text-xl font-bold text-white">Paging Entries</h3>
               <p className="text-xs text-slate-400 mt-0.5">
                 Showing {pagings.length} total entries
               </p>
@@ -902,7 +956,10 @@ const Home = () => {
                             className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 hover:bg-blue-500/25 hover:border-blue-400/50 transition-all duration-150"
                             title="Edit"
                           >
-                            <FontAwesomeIcon icon={faEdit} className="w-3 h-3" />
+                            <FontAwesomeIcon
+                              icon={faEdit}
+                              className="w-3 h-3"
+                            />
                           </button>
 
                           <button
@@ -917,14 +974,20 @@ const Home = () => {
                             className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-500/15 text-slate-400 border border-slate-500/30 hover:bg-slate-500/25 hover:border-slate-400/50 transition-all duration-150"
                             title="No Show"
                           >
-                            <FontAwesomeIcon icon={faEyeSlash} className="w-3 h-3" />
+                            <FontAwesomeIcon
+                              icon={faEyeSlash}
+                              className="w-3 h-3"
+                            />
                           </button>
                           <button
                             onClick={() => handleDelete(pag.id)}
                             className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25 hover:border-red-400/50 transition-all duration-150"
                             title="Delete"
                           >
-                            <FontAwesomeIcon icon={faTrash} className="w-3 h-3" />
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              className="w-3 h-3"
+                            />
                           </button>
                         </div>
                       </td>
@@ -935,8 +998,18 @@ const Home = () => {
                     <td colSpan={8} className="py-12 px-4">
                       <div className="flex flex-col items-center justify-center text-center">
                         <div className="w-16 h-16 mb-4 rounded-full bg-slate-700/30 flex items-center justify-center">
-                          <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                          <svg
+                            className="w-8 h-8 text-slate-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={1.5}
+                              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                            />
                           </svg>
                         </div>
                         <p className="text-slate-400 text-sm font-medium">
@@ -958,9 +1031,16 @@ const Home = () => {
             <div className="text-xs text-slate-400 font-medium">
               {pagings.length > 0 ? (
                 <>
-                  Showing <span className="text-white">{(currentPage - 1) * ITEM_PER_PAGE + 1}</span> to{" "}
-                  <span className="text-white">{Math.min(currentPage * ITEM_PER_PAGE, pagings.length)}</span> of{" "}
-                  <span className="text-white">{pagings.length}</span> entries
+                  Showing{" "}
+                  <span className="text-white">
+                    {(currentPage - 1) * ITEM_PER_PAGE + 1}
+                  </span>{" "}
+                  to{" "}
+                  <span className="text-white">
+                    {Math.min(currentPage * ITEM_PER_PAGE, pagings.length)}
+                  </span>{" "}
+                  of <span className="text-white">{pagings.length}</span>{" "}
+                  entries
                 </>
               ) : (
                 <>No entries to display</>
@@ -973,8 +1053,18 @@ const Home = () => {
                 disabled={currentPage === 1}
                 className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-700/40 border border-slate-600/40 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-700/60 hover:border-slate-500/50 transition-all duration-150"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
 
@@ -1023,8 +1113,18 @@ const Home = () => {
                 disabled={currentPage === (totalPages || 1)}
                 className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-700/40 border border-slate-600/40 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-700/60 hover:border-slate-500/50 transition-all duration-150"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
