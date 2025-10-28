@@ -17,7 +17,6 @@ function PagingScreenContent() {
   const [names, setNames] = useState<string[]>([]);
   const [freeText, setFreeText] = useState("");
   const [handleBy, setHandleBy] = useState("Jas");
-  const [currentTime, setCurrentTime] = useState("00:00");
   const [currentDate, setCurrentDate] = useState("Loading...");
   const [isClient, setIsClient] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -93,12 +92,6 @@ function PagingScreenContent() {
   // Function to update time and date
   const updateTimeAndDate = () => {
     const now = new Date();
-    setCurrentTime(
-      now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    );
     setCurrentDate(
       now.toLocaleDateString("en-ID", {
         day: "numeric",
@@ -183,11 +176,7 @@ function PagingScreenContent() {
     return names.slice(startIndex, startIndex + 4);
   };
 
-  // Function to truncate name if it's too long - just add ... at the end
-  const truncateName = (name: string) => {
-    // Simply add dots if name seems too long (let CSS handle the actual truncation)
-    return name;
-  };
+  
 
   return (
     <div
