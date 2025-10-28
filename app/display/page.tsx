@@ -17,10 +17,10 @@ function PagingScreenContent() {
   const [names, setNames] = useState<string[]>([]);
   const [freeText, setFreeText] = useState("");
   const [handleBy, setHandleBy] = useState("Jas");
+  const [currentTime, setCurrentTime] = useState("00:00");
   const [currentDate, setCurrentDate] = useState("Loading...");
   const [isClient, setIsClient] = useState(false);
-
-  // Index for which language to show
+  const [currentPage, setCurrentPage] = useState(0);
   const [index, setIndex] = useState(0);
 
   // Define types for API response
@@ -93,6 +93,12 @@ function PagingScreenContent() {
   // Function to update time and date
   const updateTimeAndDate = () => {
     const now = new Date();
+    setCurrentTime(
+      now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    );
     setCurrentDate(
       now.toLocaleDateString("en-ID", {
         day: "numeric",
@@ -116,6 +122,21 @@ function PagingScreenContent() {
     };
   }, [beltNo, fetchData]);
 
+  // Auto-change untuk passenger names (maksimal 4 per halaman)
+  useEffect(() => {
+    if (names.length <= 4) {
+      setCurrentPage(0);
+      return;
+    }
+
+    const totalPages = Math.ceil(names.length / 4);
+    const intervalId = setInterval(() => {
+      setCurrentPage((prev) => (prev + 1) % totalPages);
+    }, 5000); // ganti halaman setiap 5 detik
+
+    return () => clearInterval(intervalId);
+  }, [names.length]);
+
   // Language switch animation
   useEffect(() => {
     const interval = setInterval(() => {
@@ -134,7 +155,7 @@ function PagingScreenContent() {
           <>
             <span className="whitespace-nowrap flex justify-center items-center">
               The Following Passenger(s) of &thinsp;<strong>{sqCode}</strong>
-              &thinsp; / {isClient ? currentDate : ""} :
+              &thinsp; / {isClient ? currentDate : ""} 
             </span>
           </>
         ),
@@ -146,7 +167,7 @@ function PagingScreenContent() {
           <>
             <span className="whitespace-nowrap flex justify-center items-center">
               Penumpang Berikut Dari &thinsp;<strong>{sqCode}</strong>&thinsp; /{" "}
-              {isClient ? currentDate : ""} :
+              {isClient ? currentDate : ""} 
             </span>
           </>
         ),
@@ -155,12 +176,26 @@ function PagingScreenContent() {
     [sqCode, isClient, currentDate]
   );
 
+  // Get current page passengers
+  const getCurrentPagePassengers = () => {
+    if (names.length <= 4) return names;
+    const startIndex = currentPage * 4;
+    return names.slice(startIndex, startIndex + 4);
+  };
+
+  // Function to truncate name if it's too long - just add ... at the end
+  const truncateName = (name: string) => {
+    // Simply add dots if name seems too long (let CSS handle the actual truncation)
+    return name;
+  };
+
   return (
     <div
       className="relative h-screen w-screen flex flex-col overflow-hidden"
       style={{
         background:
-          "linear-gradient(rgba(147, 197, 253, 0.7), rgba(147, 197, 253, 0.7)), url(/airport_building.png)",
+          "linear-gradient(rgba(147, 197, 253, 0.7), rgba(147, 197, 253, 0.7))",
+          // "linear-gradient(rgba(147, 197, 253, 0.7), rgba(147, 197, 253, 0.7)), url(/airport_building.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -184,6 +219,33 @@ function PagingScreenContent() {
               {beltNo || "1"}
             </div>
           </div>
+
+          {/* Center - ATTENTION/PERHATIAN */}
+          {beltNo && sqCode && names.length > 0 && (
+            <div className="absolute left-1/2 transform -translate-x-1/2 top-8">
+              <ClientOnly>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <h1 className="text-5xl font-extrabold text-white drop-shadow-lg mb-2 text-center">
+                      {headerTexts[index].title}
+                    </h1>
+                    <p
+                      className="text-4xl text-white text-center"
+                      suppressHydrationWarning
+                    >
+                      {headerTexts[index].description}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              </ClientOnly>
+            </div>
+          )}
 
           {/* Right - Airport Building Graphic */}
           <div
@@ -218,139 +280,131 @@ function PagingScreenContent() {
         {/* Divider Line */}
         <div className="w-full border-t-2 border-white/30 -mt-2"></div>
 
-        {/* Enhanced Content Area */}
-        <div className="relative z-10 flex flex-col items-center justify-center flex-1 w-full px-8 py-8 mb-20">
-          {/* Header Section */}
-          <div className="w-full max-w-5xl text-center mb-8">
-            <ClientOnly>
-              <AnimatePresence mode="wait">
-                {beltNo && sqCode ? (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-lg">
-                      {headerTexts[index].title}
-                    </h1>
-                    <p
-                      className="text-3xl md:text-5xl text-white mb-1 mt-2"
-                      suppressHydrationWarning
-                    >
-                      {headerTexts[index].description}
-                    </p>
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
-            </ClientOnly>
-          </div>
-
-          {/* Content Area - Perfectly centered in remaining space */}
-          <div className="flex-1 flex items-center justify-center w-full">
-            {/* Content Section - Centered in available space */}
-            <div className="relative w-full max-w-7xl flex justify-center">
-              {/* Subtle content frame */}
-              <div className="absolute -inset-1 bg-gradient-to-br from-white/10 via-blue-300/5 to-white/10 rounded-xl blur-md"></div>
-
-              {/* Main content container - Always present with fixed background and perfect centering */}
-              <div
-                className="relative p-10 rounded-xl bg-black/10 backdrop-blur-sm border border-white/20 w-full mx-auto flex items-center justify-center"
-                style={{ minHeight: "450px" }}
-              >
-                {/* Dynamic passenger names grid - responsive layout that centers based on number of names */}
-                {names.length > 0 ? (
-                  <div
-                    className={`grid gap-x-8 gap-y-6 px-6 place-items-center w-full ${
-                      names.length === 1
-                        ? "grid-cols-1"
-                        : names.length === 2
-                        ? "grid-cols-2"
-                        : names.length === 3
-                        ? "grid-cols-3"
-                        : names.length <= 4
-                        ? "grid-cols-2"
-                        : names.length <= 6
-                        ? "grid-cols-3"
-                        : names.length <= 8
-                        ? "grid-cols-4"
-                        : "grid-cols-4"
-                    }`}
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {names.map((name, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-center w-full"
-                      >
-                        <p
-                          className={`font-bold text-white text-center break-words hyphens-auto ${
-                            names.length === 1
-                              ? "text-5xl md:text-6xl"
-                              : names.length === 2
-                              ? "text-5xl md:text-7xl"
-                              : names.length === 3
-                              ? "text-4xl md:text-6xl"
-                              : "text-3xl md:text-5xl"
-                          }`}
-                          style={{
-                            maxWidth: "100%",
-                            lineHeight: "1.1",
-                            display: "-webkit-box",
-                            WebkitLineClamp: "2",
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {name}
-                        </p>
-                      </div>
-                    ))}
+        {/* Flight Information Section */}
+        <div
+          className={`flex-1 flex ${names.length > 0 ? "items-start" : "items-center"} justify-center px-4 pt-4 pb-16`}
+        >
+          <div className="w-full">
+            {/* Flight Data Table - No Card */}
+            {names.length > 0 ? (
+              <div className="w-full">
+                {/* Table Header */}
+                <div className="flex items-center py-2 mb-1 px-12">
+                  <div className="w-48 flex items-center justify-start">
+                    <div className="text-7xl font-bold text-white">AIRLINE</div>
                   </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full text-white text-center">
-                    {freeText ? (
+                  <div className="text-7xl font-bold text-white flex-1 text-center">
+                    FLIGHT
+                  </div>
+                  <div className="text-7xl font-bold text-white flex-1 text-center">
+                    PASSENGER
+                  </div>
+                </div>
+
+                {/* Table Data with Fade Animation */}
+                <div className="space-y-6">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentPage}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {getCurrentPagePassengers().map((name, idx) => (
+                        <div
+                          key={`${currentPage}-${idx}`}
+                          className="flex items-center py-6 px-12"
+                        >
+                          {/* Airline Logo */}
+                          <div className="w-48 flex items-center justify-start">
+                            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-white/20">
+                              <Image
+                                src={`/airline/${sqCode.substring(0, 2)}.png`}
+                                alt={`${sqCode.substring(0, 2)} Logo`}
+                                width={180}
+                                height={90}
+                                className="object-contain"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = "none";
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Flight Number */}
+                          <div className="text-7xl font-bold text-white flex-1 text-center">
+                            {sqCode}
+                          </div>
+
+                          {/* Passenger Name */}
+                          <div className="text-7xl font-medium text-white flex-1 text-center whitespace-nowrap overflow-hidden text-ellipsis">
+                            {name}
+                          </div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            ) : freeText ? (
+              <div className="w-full flex items-center justify-center -mt-6 md:-mt-8">
+                <div className="relative w-full max-w-7xl flex justify-center">
+                  <div className="absolute -inset-1 bg-gradient-to-br from-white/10 via-blue-300/5 to-white/10 rounded-xl blur-md"></div>
+                  <div
+                    className="relative p-10 rounded-xl bg-black/10 backdrop-blur-sm border border-white/20 w-full mx-auto flex items-center justify-center"
+                    style={{ minHeight: "450px" }}
+                  >
+                    <div className="flex flex-col items-center justify-center w-full h-full text-white text-center">
                       <TextType
                         text={freeText}
-                        typingSpeed={120}
-                        pauseDuration={3000}
-                        deletingSpeed={60}
+                        typingSpeed={100}
+                        pauseDuration={2000}
+                        deletingSpeed={50}
                         showCursor={true}
                         cursorCharacter="|"
                         loop={true}
                         noDelete={true}
                         className="text-6xl font-bold text-white whitespace-pre-line"
                       />
-                    ) : (
+                    </div>
+                  </div>
+                  <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-white/30 rounded-tl-xl"></div>
+                  <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-white/30 rounded-tr-xl"></div>
+                  <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-white/30 rounded-bl-xl"></div>
+                  <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-white/30 rounded-br-xl"></div>
+                </div>
+              </div>
+            ) : (
+              <div className="w-full flex items-center justify-center -mt-6 md:-mt-8">
+                <div className="relative w-full max-w-7xl flex justify-center">
+                  <div className="absolute -inset-1 bg-gradient-to-br from-white/10 via-blue-300/5 to-white/10 rounded-xl blur-md"></div>
+                  <div
+                    className="relative p-10 rounded-xl bg-black/10 backdrop-blur-sm border border-white/20 w-full mx-auto flex items-center justify-center"
+                    style={{ minHeight: "450px" }}
+                  >
+                    <div className="flex flex-col items-center justify-center w-full h-full text-white text-center">
                       <TextType
-                        text={[
-                          "PLEASE BE CAREFUL WHILE COLLECTING THE BAG AND DO NOT TAKE THE WRONG BAGGAGE",
-                          "OUT OF GAUGE (OOG) OR OVERSIZED BAGGAGE IS LOCATED NEAR CONVEYOR BELT NO.6",
-                        ]}
+                        text={"NO FLIGHT INFORMATION"}
                         typingSpeed={100}
-                        pauseDuration={3000}
+                        pauseDuration={2000}
                         deletingSpeed={50}
                         showCursor={true}
                         cursorCharacter="|"
                         loop={true}
                         noDelete={true}
-                        className="text-6xl font-bold"
+                        className="text-6xl font-bold text-white"
                       />
-                    )}
+                    </div>
                   </div>
-                )}
+                  <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-white/30 rounded-tl-xl"></div>
+                  <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-white/30 rounded-tr-xl"></div>
+                  <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-white/30 rounded-bl-xl"></div>
+                  <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-white/30 rounded-br-xl"></div>
+                </div>
               </div>
-
-              {/* Decorative corner elements */}
-              <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-white/30 rounded-tl-xl"></div>
-              <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-white/30 rounded-tr-xl"></div>
-              <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-white/30 rounded-bl-xl"></div>
-              <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-white/30 rounded-br-xl"></div>
-            </div>
+            )}
           </div>
         </div>
 
