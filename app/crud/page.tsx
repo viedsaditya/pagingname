@@ -70,6 +70,7 @@ const Home = () => {
   //state untuk menangani success notification
   const [successMessage, setSuccessMessage] = useState("");
   const [flightNoOptions, setFlightNoOptions] = useState<string[]>([]);
+  const [showFlightNoList, setShowFlightNoList] = useState(false);
 
   //fungsi helper untuk menampilkan success message
   const showSuccessMessage = (message: string) => {
@@ -620,60 +621,104 @@ const Home = () => {
                 <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
                   Flight No <span className="text-red-400">*</span>
                 </label>
-                <input
-                  list="flightno-options"
-                  type="text"
-                  placeholder="e.g., SQ123"
-                  className="px-4 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
-                  value={form.flight_no}
-                  onFocus={async () => {
-                    try {
-                      const today = new Date();
-                      const yyyy = today.getFullYear();
-                      const mm = String(today.getMonth() + 1).padStart(2, "0");
-                      const dd = String(today.getDate()).padStart(2, "0");
-                      const date = `${yyyy}-${mm}-${dd}`;
-                      const resp = await fetch(
-                        `/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`,
-                        { cache: "no-store" }
-                      );
-                      if (resp.ok) {
-                        const json = await resp.json();
-                        const list: string[] = Array.isArray(json?.flightNos)
-                          ? json.flightNos
-                          : [];
-                        setFlightNoOptions(list);
-                      }
-                    } catch {}
-                  }}
-                  onChange={async (e) => {
-                    const value = e.target.value;
-                    setForm({ ...form, flight_no: value });
-                    try {
-                      const today = new Date();
-                      const yyyy = today.getFullYear();
-                      const mm = String(today.getMonth() + 1).padStart(2, "0");
-                      const dd = String(today.getDate()).padStart(2, "0");
-                      const date = `${yyyy}-${mm}-${dd}`;
-                      const resp = await fetch(
-                        `/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`,
-                        { cache: "no-store" }
-                      );
-                      if (resp.ok) {
-                        const json = await resp.json();
-                        const list: string[] = Array.isArray(json?.flightNos)
-                          ? json.flightNos
-                          : [];
-                        setFlightNoOptions(list);
-                      }
-                    } catch {}
-                  }}
-                />
-                <datalist id="flightno-options">
-                  {flightNoOptions.map((opt) => (
-                    <option key={opt} value={opt} />
-                  ))}
-                </datalist>
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    placeholder="e.g., SQ123"
+                    className="w-full px-4 pr-10 py-2.5 bg-slate-700/40 border border-slate-600/40 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:bg-slate-700/60 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
+                    value={form.flight_no}
+                    onFocus={async () => {
+                      try {
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, "0");
+                        const dd = String(today.getDate()).padStart(2, "0");
+                        const date = `${yyyy}-${mm}-${dd}`;
+                        const resp = await fetch(
+                          `/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`,
+                          { cache: "no-store" }
+                        );
+                        if (resp.ok) {
+                          const json = await resp.json();
+                          const list: string[] = Array.isArray(json?.flightNos)
+                            ? json.flightNos
+                            : [];
+                          setFlightNoOptions(list);
+                          setShowFlightNoList(true);
+                        }
+                      } catch {}
+                    }}
+                    onChange={async (e) => {
+                      const value = e.target.value;
+                      setForm({ ...form, flight_no: value });
+                      setShowFlightNoList(true);
+                      try {
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, "0");
+                        const dd = String(today.getDate()).padStart(2, "0");
+                        const date = `${yyyy}-${mm}-${dd}`;
+                        const resp = await fetch(
+                          `/api/flightnos?station=CGK&start_date=${date}&to_date=${date}&source=ALL`,
+                          { cache: "no-store" }
+                        );
+                        if (resp.ok) {
+                          const json = await resp.json();
+                          const list: string[] = Array.isArray(json?.flightNos)
+                            ? json.flightNos
+                            : [];
+                          setFlightNoOptions(list);
+                        }
+                      } catch {}
+                    }}
+                    onBlur={() => setTimeout(() => setShowFlightNoList(false), 150)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape") setShowFlightNoList(false);
+                    }}
+                  />
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                    <svg
+                      className="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      aria-hidden="true"
+                    >
+                      <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" />
+                    </svg>
+                  </span>
+                  {showFlightNoList && (
+                    <div className="absolute z-20 mt-1 w-full max-h-56 overflow-auto rounded-xl border border-slate-600/40 bg-slate-800/95 backdrop-blur-md shadow-xl">
+                      {flightNoOptions
+                        .filter((opt) =>
+                          opt
+                            .toLowerCase()
+                            .includes(form.flight_no.toLowerCase())
+                        )
+                        .slice(0, 100)
+                        .map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            className="w-full text-left px-3 py-2 text-sm text-slate-200 hover:bg-slate-700/50"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => {
+                              setForm({ ...form, flight_no: opt });
+                              setShowFlightNoList(false);
+                            }}
+                          >
+                            {opt}
+                          </button>
+                        ))}
+                      {flightNoOptions.filter((opt) =>
+                        opt.toLowerCase().includes(form.flight_no.toLowerCase())
+                      ).length === 0 && (
+                        <div className="px-3 py-2 text-sm text-slate-400 select-none">
+                          No matches
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
                 {error.flight_no && (
                   <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
                     <svg
