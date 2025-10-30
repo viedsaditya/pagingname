@@ -74,6 +74,16 @@ function PagingScreenContent() {
     }
   }, [beltNo]);
 
+  // Decide handler logo (JAS vs GAPURA) based on handleBy from data
+  const { handlerLogoSrc, isGapuraHandler } = useMemo(() => {
+    const normalizedHandler = (handleBy || "").toLowerCase();
+    const isGapura = normalizedHandler.includes("gapura");
+    return {
+      handlerLogoSrc: isGapura ? "/Logo_Gapura.png" : "/Logo_JAS.png",
+      isGapuraHandler: isGapura,
+    };
+  }, [handleBy]);
+
   // Fetch sekali ketika beltNo berubah
   useEffect(() => {
     fetchData();
@@ -253,14 +263,19 @@ function PagingScreenContent() {
               ></div>
 
               {/* JAS Logo in center of triangle area */}
-              <div className="absolute top-1/3 right-10">
-                <Image
-                  src="/Logo_JAS.png"
-                  alt="JAS Airways Logo"
-                  width={180}
-                  height={90}
-                  className="object-contain"
-                />
+              <div
+                className={`absolute top-1/2 -translate-y-1/2 right-6 ${
+                  isGapuraHandler ? "w-64 h-28" : "w-56 h-24"
+                } overflow-hidden`}
+              >
+                <div className="relative w-full h-full">
+                  <Image
+                    src={handlerLogoSrc}
+                    alt="Handler Logo"
+                    fill
+                    className="object-contain p-2"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -279,7 +294,7 @@ function PagingScreenContent() {
               <div className="w-full">
                 {/* Table Header */}
                 <div className="flex items-center py-2 mb-1 px-12">
-                  <div className="w-48 flex items-center justify-start">
+                  <div className="w-64 flex items-center justify-start">
                     <div className="text-7xl font-bold text-white">AIRLINE</div>
                   </div>
                   <div className="text-7xl font-bold text-white flex-1 text-center">
@@ -306,19 +321,20 @@ function PagingScreenContent() {
                           className="flex items-center py-6 px-12"
                         >
                           {/* Airline Logo */}
-                          <div className="w-48 flex items-center justify-start">
-                            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-white/20">
-                              <Image
-                                src={`/airline/${sqCode.substring(0, 2)}.png`}
-                                alt={`${sqCode.substring(0, 2)} Logo`}
-                                width={180}
-                                height={90}
-                                className="object-contain"
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.style.display = "none";
-                                }}
-                              />
+                          <div className="w-64 flex items-center justify-center">
+                            <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 w-56 h-28 flex items-center justify-center">
+                              <div className="relative w-full h-full p-3 flex items-center justify-center">
+                                <Image
+                                  src={`/airline/${sqCode.substring(0, 2)}.png`}
+                                  alt={`${sqCode.substring(0, 2)} Logo`}
+                                  fill
+                                  className="object-contain object-center"
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = "none";
+                                  }}
+                                />
+                              </div>
                             </div>
                           </div>
 
@@ -328,7 +344,7 @@ function PagingScreenContent() {
                           </div>
 
                           {/* Passenger Name */}
-                          <div className="text-7xl font-medium text-white flex-1 text-center whitespace-nowrap overflow-hidden text-ellipsis">
+                          <div className="text-7xl font-medium text-white flex-1 text-left whitespace-nowrap overflow-hidden text-ellipsis">
                             {name}
                           </div>
                         </div>
@@ -406,7 +422,9 @@ function PagingScreenContent() {
                 PLEASE REPORT TO {handleBy?.toUpperCase() || "JAS"} BAGGAGE
                 SERVICES COUNTER{" "}
                 {beltNo
-                  ? `IN FRONT OF BELT 1`
+                  ? isGapuraHandler
+                    ? "IN FRONT OF BELT 2"
+                    : "IN FRONT OF BELT 1"
                   : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
                 OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
               </span>
@@ -417,7 +435,9 @@ function PagingScreenContent() {
                 HARAP MELAPOR KE KONTER LAYANAN BAGASI{" "}
                 {handleBy?.toUpperCase() || "JAS"}{" "}
                 {beltNo
-                  ? `DI DEPAN BELT 1`
+                  ? isGapuraHandler
+                    ? "DI DEPAN BELT 2"
+                    : "DI DEPAN BELT 1"
                   : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
                 ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
               </span>
@@ -428,7 +448,9 @@ function PagingScreenContent() {
                 PLEASE REPORT TO {handleBy?.toUpperCase() || "JAS"} BAGGAGE
                 SERVICES COUNTER{" "}
                 {beltNo
-                  ? `IN FRONT OF BELT 1`
+                  ? isGapuraHandler
+                    ? "IN FRONT OF BELT 2"
+                    : "IN FRONT OF BELT 1"
                   : "AT ARRIVAL HALL INFORMATION COUNTER"}{" "}
                 OR APPROACH OUR GROUND STAFF FOR ASSISTANCE
               </span>
@@ -437,7 +459,9 @@ function PagingScreenContent() {
                 HARAP MELAPOR KE KONTER LAYANAN BAGASI{" "}
                 {handleBy?.toUpperCase() || "JAS"}{" "}
                 {beltNo
-                  ? `DI DEPAN BELT 1`
+                  ? isGapuraHandler
+                    ? "DI DEPAN BELT 2"
+                    : "DI DEPAN BELT 1"
                   : "DI KONTER INFORMASI HALL KEDATANGAN"}{" "}
                 ATAU HUBUNGI STAF DARAT KAMI UNTUK BANTUAN
               </span>
@@ -461,5 +485,5 @@ export default function PagingScreen() {
     >
       <PagingScreenContent />
     </Suspense>
-  );
+  );
 }
