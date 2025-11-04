@@ -125,16 +125,30 @@ function PagingScreenContent() {
     };
   }, [beltNo, fetchData]);
 
-  // Auto-change untuk passenger names (maksimal 4 per halaman)
+  // Auto-change untuk passenger names (5 per halaman)
   useEffect(() => {
-    if (names.length <= 4) {
-      setCurrentPage(0);
+    // Reset currentPage saat names berubah
+    setCurrentPage(0);
+    
+    // Jika kurang dari atau sama dengan 5, tidak perlu pagination
+    if (names.length <= 5) {
       return;
     }
 
-    const totalPages = Math.ceil(names.length / 4);
+    // Hitung total halaman: setiap halaman 5 passenger
+    const totalPages = Math.ceil(names.length / 5);
+    
+    // Pastikan ada lebih dari 1 halaman untuk pagination
+    if (totalPages <= 1) {
+      return;
+    }
+
     const intervalId = setInterval(() => {
-      setCurrentPage((prev) => (prev + 1) % totalPages);
+      setCurrentPage((prev) => {
+        // Maju ke halaman berikutnya, jika sudah di halaman terakhir, kembali ke 0
+        const nextPage = (prev + 1) % totalPages;
+        return nextPage;
+      });
     }, 5000); // ganti halaman setiap 5 detik
 
     return () => clearInterval(intervalId);
@@ -185,11 +199,32 @@ function PagingScreenContent() {
     [sqCode, isClient, currentDate]
   );
 
-  // Get current page passengers
+  // Get current page passengers (maksimal 5 per halaman)
   const getCurrentPagePassengers = () => {
+    if (names.length === 0) return [];
+    
+    // Jika total <= 5, tampilkan semua
     if (names.length <= 5) return names;
-    const startIndex = currentPage * 5;
-    return names.slice(startIndex, startIndex + 5);
+    
+    // Hitung total halaman (setiap halaman 5 passenger)
+    const totalPages = Math.ceil(names.length / 5);
+    
+    // Pastikan currentPage valid (0 sampai totalPages-1)
+    const safeCurrentPage = Math.max(0, Math.min(currentPage, totalPages - 1));
+    
+    // Hitung index untuk slice: setiap halaman 5 passenger
+    const startIndex = safeCurrentPage * 5;
+    const endIndex = startIndex + 5; // Ambil 5 passenger per halaman
+    
+    // Ambil 5 passenger untuk halaman ini
+    const result = names.slice(startIndex, endIndex);
+    
+    // Safety check: jika hasil kosong (seharusnya tidak terjadi), kembali ke halaman pertama
+    if (result.length === 0 && names.length > 0) {
+      return names.slice(0, 5);
+    }
+    
+    return result;
   };
 
   
@@ -268,16 +303,14 @@ function PagingScreenContent() {
                 }}
               ></div>
 
-              {/* JAS Logo in center of triangle area */}
+              {/* InJourney Logo in center of triangle area */}
               <div
-                className={`absolute top-1/2 -translate-y-1/2 right-6 ${
-                  isGapuraHandler ? "w-64 h-28" : "w-56 h-24"
-                } overflow-hidden`}
+                className="absolute top-1/2 -translate-y-1/2 left-8 w-80 h-32 overflow-hidden"
               >
                 <div className="relative w-full h-full">
                   <Image
-                    src={handlerLogoSrc}
-                    alt="Handler Logo"
+                    src="/Logo_Injourney.png"
+                    alt="InJourney Logo"
                     fill
                     className="object-contain p-2"
                   />
@@ -322,7 +355,7 @@ function PagingScreenContent() {
                           />
                         </div>
                       </div>
-                      -
+                      /
                       <span className="inline-block">{sqCode}</span>
                     </div>
                   </div>
