@@ -156,12 +156,9 @@ function PagingScreenContent() {
         title: "ATTENTION",
         description: (
           <>
-            {/* <span className="whitespace-nowrap flex justify-center items-center">
+            <span className="whitespace-nowrap flex justify-center items-center">
               The Following Passenger(s) of &thinsp;<strong>{sqCode}</strong>
               &thinsp; / {isClient ? currentDate : ""} 
-            </span> */}
-            <span className="whitespace-nowrap flex justify-center items-center">
-              The Following Passenger(s) of 
             </span>
           </>
         ),
@@ -171,12 +168,9 @@ function PagingScreenContent() {
         title: "PERHATIAN",
         description: (
           <>
-            {/* <span className="whitespace-nowrap flex justify-center items-center">
+            <span className="whitespace-nowrap flex justify-center items-center">
               Penumpang Berikut Dari &thinsp;<strong>{sqCode}</strong>&thinsp; /{" "}
               {isClient ? currentDate : ""} 
-            </span> */}
-            <span className="whitespace-nowrap flex justify-center items-center">
-              Penumpang Berikut Dari 
             </span>
           </>
         ),
@@ -187,9 +181,9 @@ function PagingScreenContent() {
 
   // Get current page passengers
   const getCurrentPagePassengers = () => {
-    if (names.length <= 5) return names;
-    const startIndex = currentPage * 5;
-    return names.slice(startIndex, startIndex + 5);
+    if (names.length <= 4) return names;
+    const startIndex = currentPage * 4;
+    return names.slice(startIndex, startIndex + 4);
   };
 
   
@@ -237,11 +231,11 @@ function PagingScreenContent() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <h1 className="text-6xl font-extrabold text-white drop-shadow-lg mb-2 text-center">
+                    <h1 className="text-5xl font-extrabold text-white drop-shadow-lg mb-2 text-center">
                       {headerTexts[index].title}
                     </h1>
                     <p
-                      className="text-5xl text-white text-center"
+                      className="text-4xl text-white text-center"
                       suppressHydrationWarning
                     >
                       {headerTexts[index].description}
@@ -300,31 +294,14 @@ function PagingScreenContent() {
               <div className="w-full">
                 {/* Table Header */}
                 <div className="flex items-center py-2 mb-1 px-12">
-                  {/* <div className="w-64 flex items-center justify-start">
+                  <div className="w-64 flex items-center justify-start">
                     <div className="text-7xl font-bold text-white">AIRLINE</div>
                   </div>
                   <div className="text-7xl font-bold text-white flex-1 text-center">
                     FLIGHT
-                  </div> */}
-                  <div className="text-6xl font-bold text-white flex-1 text-center">
-                    <div className="flex items-center justify-center gap-8">
-                      <div className="bg-white/0 w-56 h-28 flex items-center justify-center">
-                        <div className="relative w-full h-full p-3 flex items-center justify-center">
-                          <Image
-                            src={`/airline/${sqCode.substring(0, 2)}.png`}
-                            alt={`${sqCode.substring(0, 2)} Logo`}
-                            fill
-                            className="object-contain object-center"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = "none";
-                            }}
-                          />
-                        </div>
-                      </div>
-                      -
-                      <span className="inline-block">{sqCode}</span>
-                    </div>
+                  </div>
+                  <div className="text-7xl font-bold text-white flex-1 text-center">
+                    PASSENGER
                   </div>
                 </div>
 
@@ -344,7 +321,7 @@ function PagingScreenContent() {
                           className="flex items-center py-6 px-12"
                         >
                           {/* Airline Logo */}
-                          {/* <div className="w-64 flex items-center justify-center">
+                          <div className="w-64 flex items-center justify-center">
                             <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 w-56 h-28 flex items-center justify-center">
                               <div className="relative w-full h-full p-3 flex items-center justify-center">
                                 <Image
@@ -359,15 +336,15 @@ function PagingScreenContent() {
                                 />
                               </div>
                             </div>
-                          </div> */}
+                          </div>
 
                           {/* Flight Number */}
-                          {/* <div className="text-7xl font-bold text-white flex-1 text-center">
+                          <div className="text-7xl font-bold text-white flex-1 text-center">
                             {sqCode}
-                          </div> */}
+                          </div>
 
                           {/* Passenger Name */}
-                          <div className="text-7xl font-bold text-white w-full max-w-xl mx-auto text-left whitespace-nowrap">
+                          <div className="text-7xl font-medium text-white flex-1 text-left whitespace-nowrap overflow-hidden text-ellipsis">
                             {name}
                           </div>
                         </div>
@@ -433,44 +410,6 @@ function PagingScreenContent() {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Static bilingual notice above running text */}
-        <div className="fixed bottom-20 left-0 right-0 py-5">
-          <div className="w-full flex items-center justify-center">
-            <ClientOnly>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`notice-${index}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4 }}
-                  className="flex items-center justify-center"
-                >
-                  {index === 0 ? (
-                    <div className="flex items-center gap-6">
-                      <span className="text-4xl md:text-5xl text-white font-medium whitespace-nowrap">
-                        Please Approach Baggage Service {handleBy.toUpperCase() || "JAS"}
-                      </span>
-                      <div className="relative w-40 h-16">
-                        <Image src={handlerLogoSrc} alt="Handler Logo" fill className="object-contain" />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-6">
-                      <span className="text-4xl md:text-5xl text-white font-medium whitespace-nowrap">
-                        Harap Menuju Layanan Bagasi {handleBy.toUpperCase() || "JAS"}
-                      </span>
-                      <div className="relative w-40 h-16">
-                        <Image src={handlerLogoSrc} alt="Handler Logo" fill className="object-contain" />
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </ClientOnly>
           </div>
         </div>
 
