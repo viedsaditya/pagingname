@@ -235,13 +235,25 @@ function PagingScreenContent() {
       style={{
         background:
           "linear-gradient(rgba(147, 197, 253, 0.7), rgba(147, 197, 253, 0.7))",
-          // "linear-gradient(rgba(147, 197, 253, 0.7), rgba(147, 197, 253, 0.7)), url(/airport_building.png)",
-        backgroundSize: "cover",
+        backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
       }}
     >
+      {/* Background image with contrast overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url(/background_ap3.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          filter: "contrast(1.2)",
+          opacity: 0.5,
+        }}
+      ></div>
+      
       {/* Background overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-600/30 via-blue-500/20 to-blue-100/30"></div>
 
@@ -298,7 +310,7 @@ function PagingScreenContent() {
                 className="w-80 h-full opacity-60"
                 style={{
                   background:
-                    "linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 100%)",
+                    "linear-gradient(45deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%)",
                   clipPath: "polygon(0% 100%, 30% 0%, 100% 0%, 100% 100%)",
                 }}
               ></div>
@@ -469,43 +481,44 @@ function PagingScreenContent() {
           </div>
         </div>
 
-        {/* Static bilingual notice above running text */}
-        <div className="fixed bottom-20 left-0 right-0 py-5">
-          <div className="w-full flex items-center justify-center">
-            <ClientOnly>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`notice-${index}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4 }}
-                  className="flex items-center justify-center"
-                >
-                  {index === 0 ? (
-                    <div className="flex items-center gap-6">
-                      <span className="text-4xl md:text-5xl text-white font-medium whitespace-nowrap">
-                        Please Approach Baggage Service {handleBy.toUpperCase() || "JAS"}
-                      </span>
-                      <div className="relative w-40 h-16">
-                        <Image src={handlerLogoSrc} alt="Handler Logo" fill className="object-contain" />
+        {/* Static bilingual notice above running text - only show when there are passengers */}
+        {names.length > 0 && (
+          <div className="fixed bottom-20 left-0 right-0 py-5">
+            <div className="w-full flex items-center justify-center">
+              <ClientOnly>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {index === 0 ? (
+                      <div className="flex items-center gap-6">
+                        <span className="text-4xl md:text-5xl text-white font-medium whitespace-nowrap">
+                          Please Approach Baggage Service {handleBy.toUpperCase() || "JAS"}
+                        </span>
+                        <div className="relative w-40 h-16">
+                          <Image src={handlerLogoSrc} alt="Handler Logo" fill className="object-contain" />
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-6">
-                      <span className="text-4xl md:text-5xl text-white font-medium whitespace-nowrap">
-                        Harap Menuju Layanan Bagasi {handleBy.toUpperCase() || "JAS"}
-                      </span>
-                      <div className="relative w-40 h-16">
-                        <Image src={handlerLogoSrc} alt="Handler Logo" fill className="object-contain" />
+                    ) : (
+                      <div className="flex items-center gap-6">
+                        <span className="text-4xl md:text-5xl text-white font-medium whitespace-nowrap">
+                          Harap Menuju Layanan Bagasi {handleBy.toUpperCase() || "JAS"}
+                        </span>
+                        <div className="relative w-40 h-16">
+                          <Image src={handlerLogoSrc} alt="Handler Logo" fill className="object-contain" />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </ClientOnly>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </ClientOnly>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Running Text Footer */}
         <div className="fixed bottom-0 left-0 right-0 z-50 py-4 overflow-hidden bg-blue-200/80 backdrop-blur-sm border-t border-white/30">
